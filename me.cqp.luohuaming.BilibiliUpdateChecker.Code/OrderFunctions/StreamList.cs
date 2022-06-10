@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
+using me.cqp.luohuaming.BilibiliUpdateChecker.Tool;
+using Newtonsoft.Json.Linq;
 
 namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
 {
@@ -32,8 +34,12 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             int index = 1;
             foreach(var item in MainSave.UpdateChecker.GetStreamList())
             {
-                sb.AppendLine($"{index}. {item.Item2} - {item.Item1}{(item.Item3?"[直播中]":"")}");
-                index++;
+                var group = JsonConfig.GetConfig<JObject>("Monitor_Stream");
+                if (group.ContainsKey(e.FromGroup))
+                {
+                    sb.AppendLine($"{index}. {item.Item2} - {item.Item1}{(item.Item3 ? "[直播中]" : "")}");
+                    index++;
+                }
             }
             sendText.MsgToSend.Add(sb.ToString());
             result.SendObject.Add(sendText);

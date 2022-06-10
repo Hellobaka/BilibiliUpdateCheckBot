@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
+using me.cqp.luohuaming.BilibiliUpdateChecker.Tool;
+using Newtonsoft.Json.Linq;
 
 namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
 {
@@ -33,8 +35,12 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             int index = 1;
             foreach (var item in MainSave.UpdateChecker.GetDynamicList())
             {
-                sb.AppendLine($"{index}. {item.Item2} - {item.Item1}");
-                index++;
+                var group = JsonConfig.GetConfig<JObject>("Monitor_Dynamic");
+                if (group.ContainsKey(e.FromGroup))
+                {
+                    sb.AppendLine($"{index}. {item.Item2} - {item.Item1}");
+                    index++;
+                }
             }
             sendText.MsgToSend.Add(sb.ToString()); result.SendObject.Add(sendText);
             return result;
