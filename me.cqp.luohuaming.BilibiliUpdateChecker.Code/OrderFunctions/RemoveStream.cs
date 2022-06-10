@@ -57,7 +57,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             var group = JsonConfig.GetConfig<JObject>("Monitor_Stream");
             if (group.ContainsKey(e.FromGroup))
             {
-                (group[e.FromGroup] as JArray).Remove(uid);
+                group.Remove(e.FromGroup);
             }
             JsonConfig.WriteConfig("Monitor_Streams", group);
             bool existFlag = false;
