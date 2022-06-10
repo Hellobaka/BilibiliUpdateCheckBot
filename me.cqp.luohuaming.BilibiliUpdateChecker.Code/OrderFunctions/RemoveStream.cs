@@ -54,7 +54,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                     return result;
                 }
             }
-            var group = JsonConfig.GetConfig<JObject>("Monitor_Streams");
+            var group = JsonConfig.GetConfig<JObject>("Monitor_Stream");
             if (group.ContainsKey(e.FromGroup))
             {
                 (group[e.FromGroup] as JArray).Remove(uid);
