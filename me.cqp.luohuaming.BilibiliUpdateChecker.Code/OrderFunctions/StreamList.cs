@@ -32,7 +32,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             int index = 1;
             foreach(var item in MainSave.UpdateChecker.GetStreamList())
             {
-                sb.AppendLine($"{index}. {item.Item2} - {item.Item1}");
+                sb.AppendLine($"{index}. {item.Item2} - {item.Item1}{(item.Item3?"[直播中]":"")}");
                 index++;
             }
             sendText.MsgToSend.Add(sb.ToString());
