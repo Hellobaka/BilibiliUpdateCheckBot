@@ -43,6 +43,17 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 return;
             }
             UpdateChecker update = new(MainSave.AppDirectory, MainSave.ImageDirectory);
+            LogHelper.InfoMethod = (type, message, status) =>
+            {
+                if(!status)
+                {
+                    MainSave.CQLog.Warning(type, message);
+                }
+                else
+                {
+                    MainSave.CQLog.Debug(type, message);
+                }
+            };
             MainSave.UpdateChecker = update;
             update.DynamicCheckCD = 2;
             update.OnDynamic += UpdateChecker_OnDynamic;
@@ -59,6 +70,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 update.AddStream(item);
             }
             update.Start();
+            MainSave.CQLog.Info("载入成功", $"监视了 {dynamics.Length} 个动态，{streams.Length} 个直播");
         }
 
         private void UpdateChecker_OnStream(BilibiliMonitor.Models.LiveStreamsModel.RoomInfo item, string picPath)
