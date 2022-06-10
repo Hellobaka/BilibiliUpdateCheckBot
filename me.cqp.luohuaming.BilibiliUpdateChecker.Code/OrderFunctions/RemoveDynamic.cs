@@ -61,7 +61,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             }
             JsonConfig.WriteConfig("Monitor_Dynamic", group);
             bool existFlag = false;
-            foreach(JProperty item in group.Values())
+            foreach(JProperty item in group.Properties())
             {
                 if((item.Value as JArray).Any(x => {
                     var p = (int)x;
