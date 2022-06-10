@@ -63,8 +63,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
 
         private void UpdateChecker_OnStream(BilibiliMonitor.Models.LiveStreamsModel.RoomInfo item, string picPath)
         {
-            var group = JsonConfig.GetConfig<JArray>("Monitor_Stream");
-            foreach(JProperty id in group)
+            var group = JsonConfig.GetConfig<JObject>("Monitor_Stream");
+            foreach(JProperty id in group.Values())
             {
                 var o = id.Value.ToObject<int[]>();
                 if(o.Any(x=>x == item.uid))
@@ -76,8 +76,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
 
         private void UpdateChecker_OnDynamic(BilibiliMonitor.Models.DynamicModel.Item item, int uid, string picPath)
         {
-            var group = JsonConfig.GetConfig<JArray>("Monitor_Dynamic");
-            foreach (JProperty id in group)
+            var group = JsonConfig.GetConfig<JObject>("Monitor_Dynamic");
+            foreach (JProperty id in group.Values())
             {
                 var o = id.Value.ToObject<int[]>();
                 if (o.Any(x => x == uid))
