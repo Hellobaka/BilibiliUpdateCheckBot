@@ -41,7 +41,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add("用户ID格式不正确");
                 return result;
             }
-            var dynamics = JsonConfig.GetConfig<List<int>>("Dynamics");
+            var dynamicsList = JsonConfig.GetConfig<List<int>>("Dynamics");
             var group = JsonConfig.GetConfig<JObject>("Monitor_Dynamic");
             if(group.ContainsKey(e.FromGroup))
             {
@@ -52,13 +52,17 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 group.Add(new JProperty(e.FromGroup, new JArray(uid)));
             }
             JsonConfig.WriteConfig("Monitor_Dynamic", group);
-            if(!dynamics.Any(x=>x == uid))
+            if(!dynamicsList.Any(x=>x == uid))
             {
-                dynamics.Add(uid);
-                MainSave.UpdateChecker.AddDynamic(uid);
-                JsonConfig.WriteConfig("Dynamics", dynamics);
+                dynamicsList.Add(uid);
+                var dy = MainSave.UpdateChecker.AddDynamic(uid);                
+                JsonConfig.WriteConfig("Dynamics", dynamicsList);
+                sendText.MsgToSend.Add($"{dy.UserName} 添加动态监视成功");
             }
-            sendText.MsgToSend.Add("添加成功");
+            else
+            {
+                sendText.MsgToSend.Add("重复添加");
+            }
             return result;
         }
         

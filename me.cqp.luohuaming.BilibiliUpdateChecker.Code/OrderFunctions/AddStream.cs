@@ -55,10 +55,14 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             if (!streams.Any(x => x == uid))
             {
                 streams.Add(uid);
-                MainSave.UpdateChecker.AddStream(uid);
+                var live = MainSave.UpdateChecker.AddStream(uid);
                 JsonConfig.WriteConfig("Streams", streams);
+                sendText.MsgToSend.Add($"{live.uname} 添加直播监视成功");
             }
-            sendText.MsgToSend.Add("添加成功"); 
+            else
+            {
+                sendText.MsgToSend.Add("已经添加过了");
+            }
             return result;
         }
 
