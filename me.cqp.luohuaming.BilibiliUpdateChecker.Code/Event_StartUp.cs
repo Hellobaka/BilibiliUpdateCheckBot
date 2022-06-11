@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using System.Linq;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp;
 using System.IO;
+using System.Text;
 
 namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
 {
@@ -81,7 +82,10 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 var o = id.Value.ToObject<int[]>();
                 if(o.Any(x=>x == item.uid))
                 {
-                    MainSave.CQApi.SendGroupMessage(Convert.ToInt64(id.Name), CQApi.CQCode_Image(picPath));
+                    StringBuilder sb = new();
+                    sb.Append($"{item.uname} 开播了, https://live.bilibili.com/{item.room_id}");
+                    sb.Append(CQApi.CQCode_Image(picPath));
+                    MainSave.CQApi.SendGroupMessage(Convert.ToInt64(id.Name), sb.ToString());
                 }
             }
         }
@@ -94,7 +98,10 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 var o = id.Value.ToObject<int[]>();
                 if (o.Any(x => x == uid))
                 {
-                    MainSave.CQApi.SendGroupMessage(Convert.ToInt64(id.Name), CQApi.CQCode_Image(picPath));
+                    StringBuilder sb = new();
+                    sb.Append($"{item.modules.module_author.name} 更新了动态, https://t.bilibili.com/{item.id_str}");
+                    sb.Append(CQApi.CQCode_Image(picPath));
+                    MainSave.CQApi.SendGroupMessage(Convert.ToInt64(id.Name), sb.ToString());
                 }
             }
         }
