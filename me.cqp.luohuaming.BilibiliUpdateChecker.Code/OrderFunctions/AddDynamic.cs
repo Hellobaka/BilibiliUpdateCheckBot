@@ -43,8 +43,14 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             }
             var dynamicsList = JsonConfig.GetConfig<List<int>>("Dynamics");
             var group = JsonConfig.GetConfig<JObject>("Monitor_Dynamic");
-            if(group.ContainsKey(e.FromGroup))
+            if (group.ContainsKey(e.FromGroup))
             {
+                if (group[e.FromGroup].Contains(uid) && dynamicsList.Any(x => x == e.FromGroup))
+                {
+                    sendText.MsgToSend.Add("重复添加");
+                    return result;
+                }
+
                 (group[e.FromGroup] as JArray).Add(uid);
             }
             else
@@ -57,12 +63,17 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 dynamicsList.Add(uid);
                 var dy = MainSave.UpdateChecker.AddDynamic(uid);                
                 JsonConfig.WriteConfig("Dynamics", dynamicsList);
-                sendText.MsgToSend.Add($"{dy.UserName} 添加动态监视成功");
+            }
+            var c = MainSave.UpdateChecker.GetDynamic(uid);
+            if (c != null)
+            {
+                sendText.MsgToSend.Add($"{c.UserName} 添加动态监视成功");
             }
             else
             {
-                sendText.MsgToSend.Add("重复添加");
+                sendText.MsgToSend.Add("添加失败");
             }
+
             return result;
         }
         

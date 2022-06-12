@@ -45,23 +45,33 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             var group = JsonConfig.GetConfig<JObject>("Monitor_Stream");
             if (group.ContainsKey(e.FromGroup))
             {
+                if (group[e.FromGroup].Contains(uid) && streams.Any(x => x == e.FromGroup))
+                {
+                    sendText.MsgToSend.Add("重复添加");
+                    return result;
+                }
+
                 (group[e.FromGroup] as JArray).Add(uid);
             }
             else
             {
                 group.Add(new JProperty(e.FromGroup, new JArray(uid)));
             }
-            JsonConfig.WriteConfig("Monitor_Streams", group);
+            JsonConfig.WriteConfig("Monitor_Stream", group);
             if (!streams.Any(x => x == uid))
             {
                 streams.Add(uid);
                 var live = MainSave.UpdateChecker.AddStream(uid);
                 JsonConfig.WriteConfig("Streams", streams);
-                sendText.MsgToSend.Add($"{live.uname} 添加直播监视成功");
+            }
+            var c = MainSave.UpdateChecker.GetLiveStream(uid);
+            if (c != null)
+            {
+                sendText.MsgToSend.Add($"{c.uname} 添加直播监视成功");
             }
             else
             {
-                sendText.MsgToSend.Add("已经添加过了");
+                sendText.MsgToSend.Add("添加失败");
             }
             return result;
         }
