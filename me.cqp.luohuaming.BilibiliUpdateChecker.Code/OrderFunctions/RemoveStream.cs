@@ -59,7 +59,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             {
                 group.Remove(e.FromGroup);
             }
-            JsonConfig.WriteConfig("Monitor_Streams", group);
+            JsonConfig.WriteConfig("Monitor_Stream", group);
             bool existFlag = false;
             foreach (JProperty item in group.Properties())
             {
