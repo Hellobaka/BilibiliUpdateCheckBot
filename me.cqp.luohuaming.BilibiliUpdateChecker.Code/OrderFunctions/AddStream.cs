@@ -7,6 +7,7 @@ using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Tool;
 using Newtonsoft.Json.Linq;
+using BilibiliMonitor.BilibiliAPI;
 
 namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
 {
@@ -58,16 +59,16 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 group.Add(new JProperty(e.FromGroup, new JArray(uid)));
             }
             JsonConfig.WriteConfig("Monitor_Stream", group);
+            LiveStreams live = null;
             if (!streams.Any(x => x == uid))
             {
                 streams.Add(uid);
-                var live = MainSave.UpdateChecker.AddStream(uid);
+                live = MainSave.UpdateChecker.AddStream(uid);
                 JsonConfig.WriteConfig("Streams", streams);
             }
-            var c = MainSave.UpdateChecker.GetLiveStream(uid);
-            if (c != null)
+            if (live != null)
             {
-                sendText.MsgToSend.Add($"{c.uname} 添加直播监视成功");
+                sendText.MsgToSend.Add($"{live.Name} 添加直播监视成功");
             }
             else
             {

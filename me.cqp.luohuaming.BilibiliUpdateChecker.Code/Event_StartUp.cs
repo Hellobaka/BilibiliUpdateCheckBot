@@ -10,6 +10,7 @@ using System.Linq;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp;
 using System.IO;
 using System.Text;
+using BilibiliMonitor.Models;
 
 namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
 {
@@ -74,16 +75,16 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             MainSave.CQLog.Info("载入成功", $"监视了 {dynamics.Length} 个动态，{streams.Length} 个直播");
         }
 
-        private void UpdateChecker_OnStream(BilibiliMonitor.Models.LiveStreamsModel.RoomInfo item, string picPath)
+        private void UpdateChecker_OnStream(LiveStreamsModel.RoomInfo roomInfo, LiveStreamsModel.UserInfo userInfo, string picPath)
         {
             var group = JsonConfig.GetConfig<JObject>("Monitor_Stream");
             foreach(JProperty id in group.Properties())
             {
                 var o = id.Value.ToObject<int[]>();
-                if(o.Any(x=>x == item.uid))
+                if(o.Any(x=>x == userInfo.info.uid))
                 {
                     StringBuilder sb = new();
-                    sb.Append($"{item.uname} 开播了, https://live.bilibili.com/{item.room_id}");
+                    sb.Append($"{userInfo.info.uname} 开播了, https://live.bilibili.com/{roomInfo.room_id}");
                     sb.Append(CQApi.CQCode_Image(picPath));
                     MainSave.CQApi.SendGroupMessage(Convert.ToInt64(id.Name), sb.ToString());
                 }
