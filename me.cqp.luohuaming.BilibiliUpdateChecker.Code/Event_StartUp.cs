@@ -60,9 +60,11 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             update.DynamicCheckCD = 2;
             update.OnDynamic += UpdateChecker_OnDynamic;
             update.OnStream += UpdateChecker_OnStream;
+            update.OnBangumi += UpdateChecker_OnBangumi;
             JsonConfig.Init(MainSave.AppDirectory);
             var dynamics = JsonConfig.GetConfig<int[]>("Dynamics");
             var streams = JsonConfig.GetConfig<int[]>("Streams");
+            var bangumis = JsonConfig.GetConfig<int[]>("Bangumis");
             foreach (var item in dynamics)
             {
                 update.AddDynamic(item);
@@ -71,8 +73,12 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             {
                 update.AddStream(item);
             }
+            foreach (var item in bangumis)
+            {
+                update.AddBangumi(item);
+            }
             update.Start();
-            MainSave.CQLog.Info("载入成功", $"监视了 {dynamics.Length} 个动态，{streams.Length} 个直播");
+            MainSave.CQLog.Info("载入成功", $"监视了 {dynamics.Length} 个动态，{streams.Length} 个直播，{bangumis.Length} 个番剧");
         }
 
         private void UpdateChecker_OnStream(LiveStreamsModel.RoomInfo roomInfo, LiveStreamsModel.UserInfo userInfo, string picPath)
@@ -101,6 +107,21 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 {
                     StringBuilder sb = new();
                     sb.Append($"{item.modules.module_author.name} 更新了动态, https://t.bilibili.com/{item.id_str}");
+                    sb.Append(CQApi.CQCode_Image(picPath));
+                    MainSave.CQApi.SendGroupMessage(Convert.ToInt64(id.Name), sb.ToString());
+                }
+            }
+        }
+        private void UpdateChecker_OnBangumi(BangumiModel.DetailInfo bangumi, BangumiModel.Detail_Episode epInfo, string picPath)
+        {
+            var group = JsonConfig.GetConfig<JObject>("Monitor_Bangumis");
+            foreach (JProperty id in group.Properties())
+            {
+                var o = id.Value.ToObject<int[]>();
+                if (o.Any(x => x == Convert.ToInt32(bangumi.result.season_id)))
+                {
+                    StringBuilder sb = new();
+                    sb.Append($"{bangumi.result.season_title} 更新了新的一集, https://www.bilibili.com/video/av{epInfo.av_id}");
                     sb.Append(CQApi.CQCode_Image(picPath));
                     MainSave.CQApi.SendGroupMessage(Convert.ToInt64(id.Name), sb.ToString());
                 }
