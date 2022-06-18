@@ -11,6 +11,7 @@ using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp;
 using System.IO;
 using System.Text;
 using BilibiliMonitor.Models;
+using System.Collections.Generic;
 
 namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
 {
@@ -61,6 +62,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             update.OnDynamic += UpdateChecker_OnDynamic;
             update.OnStream += UpdateChecker_OnStream;
             update.OnBangumi += UpdateChecker_OnBangumi;
+            update.OnBangumiEnd += Update_OnBangumiEnd;
             JsonConfig.Init(MainSave.AppDirectory);
             var dynamics = JsonConfig.GetConfig<int[]>("Dynamics");
             var streams = JsonConfig.GetConfig<int[]>("Streams");
@@ -79,6 +81,26 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             }
             update.Start();
             MainSave.CQLog.Info("载入成功", $"监视了 {dynamics.Length} 个动态，{streams.Length} 个直播，{bangumis.Length} 个番剧");
+        }
+
+        private void Update_OnBangumiEnd(BilibiliMonitor.BilibiliAPI.Bangumi bangumi)
+        {
+            int sid = bangumi.SeasonID;
+            var bangumis = JsonConfig.GetConfig<List<int>>("Bangumis");
+            var group = JsonConfig.GetConfig<JObject>("Monitor_Bangumis");
+            foreach (JProperty item in group.Properties())
+            {
+                if ((item.Value as JArray).Any(x => {
+                    var p = (int)x;
+                    return p == sid;
+                }))
+                {
+                    item.Value.Children().FirstOrDefault(x => x.Value<int>() == sid)?.Remove();
+                }
+            }
+            bangumis.Remove(sid); 
+            JsonConfig.WriteConfig("Bangumis", bangumis);
+            JsonConfig.WriteConfig("Monitor_Bangumis", group);
         }
 
         private void UpdateChecker_OnStream(LiveStreamsModel.RoomInfo roomInfo, LiveStreamsModel.UserInfo userInfo, string picPath)
