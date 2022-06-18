@@ -42,22 +42,24 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 return result;
             }
             var bangumis = JsonConfig.GetConfig<List<int>>("Bangumis");
-            if(!bangumis.Any(x=>x == sid))
-            {
-                if(bangumis.Count > sid)
-                {
-                    sid = bangumis[sid - 1];
-                }
-                else
-                {
-                    sendText.MsgToSend.Add("番剧sid或序号格式不正确");
-                    return result;
-                }
-            }
+            
             var group = JsonConfig.GetConfig<JObject>("Monitor_Bangumis");
             if (group.ContainsKey(e.FromGroup))
             {
-                group.Remove(e.FromGroup);
+                var groupArr = group[e.FromGroup].ToObject<List<int>>();
+                if (!groupArr.Any(x => x == sid))
+                {
+                    if (groupArr.Count > sid)
+                    {
+                        sid = groupArr[sid - 1];
+                    }
+                    else
+                    {
+                        sendText.MsgToSend.Add("番剧sid或序号格式不正确");
+                        return result;
+                    }
+                }
+                group[e.FromGroup].Children().FirstOrDefault(x => x.Value<int>() == sid)?.Remove();
             }
             JsonConfig.WriteConfig("Monitor_Bangumis", group);
             bool existFlag = false;

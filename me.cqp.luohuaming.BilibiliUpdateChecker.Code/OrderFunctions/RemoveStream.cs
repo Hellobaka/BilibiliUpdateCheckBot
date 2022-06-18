@@ -42,22 +42,24 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 return result;
             }
             var streams = JsonConfig.GetConfig<List<int>>("Streams");
-            if (!streams.Any(x => x == uid))
-            {
-                if (streams.Count > uid)
-                {
-                    uid = streams[uid - 1];
-                }
-                else
-                {
-                    sendText.MsgToSend.Add("用户ID或序号格式不正确");
-                    return result;
-                }
-            }
             var group = JsonConfig.GetConfig<JObject>("Monitor_Stream");
             if (group.ContainsKey(e.FromGroup))
             {
-                group.Remove(e.FromGroup);
+                var groupArr = group[e.FromGroup].ToObject<List<int>>();
+                if (!groupArr.Any(x => x == uid))
+                {
+                    if (groupArr.Count > uid)
+                    {
+                        uid = groupArr[uid - 1];
+                    }
+                    else
+                    {
+                        sendText.MsgToSend.Add("用户ID或序号格式不正确");
+                        return result;
+                    }
+                }
+
+                group[e.FromGroup].Children().FirstOrDefault(x => x.Value<int>() == uid)?.Remove();
             }
             JsonConfig.WriteConfig("Monitor_Stream", group);
             bool existFlag = false;
