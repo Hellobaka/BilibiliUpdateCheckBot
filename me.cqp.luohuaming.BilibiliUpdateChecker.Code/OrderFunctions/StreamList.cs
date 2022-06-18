@@ -35,7 +35,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             foreach(var item in MainSave.UpdateChecker.GetStreamList())
             {
                 var group = JsonConfig.GetConfig<JObject>("Monitor_Stream");
-                if (group.ContainsKey(e.FromGroup))
+                if (group.ContainsKey(e.FromGroup) && group[e.FromGroup].Any(x => x.Value<int>() == item.Item1))
                 {
                     sb.AppendLine($"{index}. {item.Item2} - {item.Item1}{(item.Item3 ? "[直播中]" : "")}");
                     index++;

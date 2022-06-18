@@ -36,7 +36,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             foreach (var item in MainSave.UpdateChecker.GetDynamicList())
             {
                 var group = JsonConfig.GetConfig<JObject>("Monitor_Dynamic");
-                if (group.ContainsKey(e.FromGroup))
+                if (group.ContainsKey(e.FromGroup) && group[e.FromGroup].Any(x => x.Value<int>() == item.Item1))
                 {
                     sb.AppendLine($"{index}. {item.Item2} - {item.Item1}");
                     index++;
