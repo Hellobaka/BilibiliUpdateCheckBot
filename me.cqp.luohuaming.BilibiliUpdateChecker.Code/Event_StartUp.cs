@@ -134,7 +134,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 }
             }
         }
-        private void UpdateChecker_OnBangumi(BangumiModel.DetailInfo bangumi, BangumiModel.Detail_Episode epInfo, string picPath)
+        private void UpdateChecker_OnBangumi(BangumiModel.DetailInfo bangumi, BangumiModel.Episode epInfo, string picPath)
         {
             var group = JsonConfig.GetConfig<JObject>("Monitor_Bangumis");
             foreach (JProperty id in group.Properties())
@@ -143,7 +143,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 if (o.Any(x => x == Convert.ToInt32(bangumi.result.season_id)))
                 {
                     StringBuilder sb = new();
-                    sb.Append($"{bangumi.result.title} 更新了新的一集, https://www.bilibili.com/video/av{epInfo.av_id}");
+                    sb.Append($"{bangumi.result.title} 更新了新的一集, {epInfo.share_url}");
                     sb.Append(CQApi.CQCode_Image(picPath));
                     MainSave.CQApi.SendGroupMessage(Convert.ToInt64(id.Name), sb.ToString());
                 }
