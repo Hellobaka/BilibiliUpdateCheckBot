@@ -29,7 +29,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 SendID = e.FromGroup,
             };
             result.SendObject.Add(sendText);
-            if (e.FromGroup != 891787846) { result.SendFlag = false; return result; }
+            // if (e.FromGroup != 891787846) { result.SendFlag = false; return result; }
 
             string vid;
             if (e.Message.Text.Contains("[CQ:rich,") && e.Message.Text.Contains("b23.tv"))

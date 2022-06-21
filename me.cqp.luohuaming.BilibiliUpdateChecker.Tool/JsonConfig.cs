@@ -42,6 +42,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Tool
                     return (T)(object)new int[] { };
                 if (typeof(T) == typeof(List<int>))
                     return (T)(object)new List<int> { };
+                if (typeof(T) == typeof(List<long>))
+                    return (T)(object)new List<long> { };
                 if (typeof(T) == typeof(JObject))
                     return (T)(object)new JObject();
                 throw new Exception("无法默认返回");
