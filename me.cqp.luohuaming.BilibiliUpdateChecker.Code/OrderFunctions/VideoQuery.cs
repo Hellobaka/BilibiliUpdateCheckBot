@@ -41,7 +41,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 string t = Regex.Replace(e.Message.Text, "\\[CQ:.*\\]", "");
                 vid = Videos.ParseURL(t); 
             }
-            //e.CQLog.Debug("视频解析", vid);
+            e.CQLog.Debug("视频解析", vid);
             if (string.IsNullOrEmpty(vid))
             {
                 result.SendFlag = false;
