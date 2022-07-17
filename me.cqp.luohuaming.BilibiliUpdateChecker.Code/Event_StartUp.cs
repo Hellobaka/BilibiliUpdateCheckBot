@@ -12,6 +12,7 @@ using System.IO;
 using System.Text;
 using BilibiliMonitor.Models;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
 {
@@ -58,29 +59,32 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 }
             };
             MainSave.UpdateChecker = update;
-            update.DynamicCheckCD = 2;
-            update.OnDynamic += UpdateChecker_OnDynamic;
-            update.OnStream += UpdateChecker_OnStream;
-            update.OnBangumi += UpdateChecker_OnBangumi;
-            update.OnBangumiEnd += Update_OnBangumiEnd;
-            JsonConfig.Init(MainSave.AppDirectory);
-            var dynamics = JsonConfig.GetConfig<int[]>("Dynamics");
-            var streams = JsonConfig.GetConfig<int[]>("Streams");
-            var bangumis = JsonConfig.GetConfig<int[]>("Bangumis");
-            foreach (var item in dynamics)
+            new Thread(() =>
             {
-                update.AddDynamic(item);
-            }
-            foreach (var item in streams)
-            {
-                update.AddStream(item);
-            }
-            foreach (var item in bangumis)
-            {
-                update.AddBangumi(item);
-            }
-            update.Start();
-            MainSave.CQLog.Info("载入成功", $"监视了 {dynamics.Length} 个动态，{streams.Length} 个直播，{bangumis.Length} 个番剧");
+                update.DynamicCheckCD = 2;
+                update.OnDynamic += UpdateChecker_OnDynamic;
+                update.OnStream += UpdateChecker_OnStream;
+                update.OnBangumi += UpdateChecker_OnBangumi;
+                update.OnBangumiEnd += Update_OnBangumiEnd;
+                JsonConfig.Init(MainSave.AppDirectory);
+                var dynamics = JsonConfig.GetConfig<int[]>("Dynamics");
+                var streams = JsonConfig.GetConfig<int[]>("Streams");
+                var bangumis = JsonConfig.GetConfig<int[]>("Bangumis");
+                foreach (var item in dynamics)
+                {
+                    update.AddDynamic(item);
+                }
+                foreach (var item in streams)
+                {
+                    update.AddStream(item);
+                }
+                foreach (var item in bangumis)
+                {
+                    update.AddBangumi(item);
+                }
+                update.Start();
+                MainSave.CQLog.Info("载入成功", $"监视了 {dynamics.Length} 个动态，{streams.Length} 个直播，{bangumis.Length} 个番剧");
+            }).Start();
         }
 
         private void Update_OnBangumiEnd(BilibiliMonitor.BilibiliAPI.Bangumi bangumi)
