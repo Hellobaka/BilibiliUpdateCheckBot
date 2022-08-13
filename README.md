@@ -28,6 +28,16 @@
 1. 在哔哩哔哩番剧页的网址截取，比如`https://www.bilibili.com/bangumi/play/ss41417`，`41417`就是sid
 2. `https://bangumi.jasonkhew96.eu.org/bilibili` 手动查询，复制`Season ID`
 
+## 视频解析可用模式
+- https://www.bilibili.com/video/BVxxx
+- https://www.bilibili.com/video/avxxx
+- https://b23.tv/avxxx
+- https://b23.tv/xxx
+- 分享的卡片
+- 纯BV/av号
+
+如有其他模式欢迎补充
+
 ## 群控制
 在数据目录的`Config.json`配置文件内，有三个字段用于控制群启用逻辑，默认情况下启用白名单模式
 * Mode: 0=>白名单；1=>黑名单
