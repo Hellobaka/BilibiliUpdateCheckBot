@@ -51,6 +51,17 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             try
             {
                 sendText.MsgToSend.Add(CQApi.CQCode_Image(Videos.DrawVideoPic(vid)).ToString());
+                if (e.Message.Text.Contains("b23.tv"))
+                {
+                    if(int.TryParse(vid, out int aid))
+                    {
+                        sendText.MsgToSend.Add($"https://www.bilibili.com/video/av{aid}");
+                    }
+                    else
+                    {
+                        sendText.MsgToSend.Add($"https://www.bilibili.com/video/{vid}");
+                    }
+                }
             }
             catch
             {
