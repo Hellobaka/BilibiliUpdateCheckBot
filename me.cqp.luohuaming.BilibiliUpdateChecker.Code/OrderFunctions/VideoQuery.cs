@@ -29,7 +29,6 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 SendID = e.FromGroup,
             };
             result.SendObject.Add(sendText);
-            // if (e.FromGroup != 891787846) { result.SendFlag = false; return result; }
 
             string vid;
             if (e.Message.Text.Contains("[CQ:rich,") && e.Message.Text.Contains("b23.tv"))
@@ -41,7 +40,6 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 string t = Regex.Replace(e.Message.Text, "\\[CQ:.*\\]", "");
                 vid = Videos.ParseURL(t); 
             }
-            //e.CQLog.Debug("视频解析", vid);
             if (string.IsNullOrEmpty(vid))
             {
                 result.SendFlag = false;
