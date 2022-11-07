@@ -49,7 +49,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 var groupArr = group[e.FromGroup].ToObject<List<int>>();
                 if (!groupArr.Any(x => x == sid))
                 {
-                    if (groupArr.Count > sid)
+                    if (groupArr.Count >= sid)
                     {
                         sid = groupArr[sid - 1];
                     }
