@@ -117,7 +117,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 {
                     StringBuilder sb = new();
                     sb.Append($"{userInfo.info.uname} 开播了, https://live.bilibili.com/{roomInfo.room_id}");
-                    sb.Append(CQApi.CQCode_Image(picPath));
+                    if (string.IsNullOrEmpty(picPath) is false)
+                        sb.Append(CQApi.CQCode_Image(picPath));
                     MainSave.CQApi.SendGroupMessage(Convert.ToInt64(id.Name), sb.ToString());
                 }
             }
@@ -133,7 +134,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 {
                     StringBuilder sb = new();
                     sb.Append($"{item.modules.module_author.name} 更新了动态, https://t.bilibili.com/{item.id_str}");
-                    sb.Append(CQApi.CQCode_Image(picPath));
+                    if (string.IsNullOrEmpty(picPath) is false)
+                        sb.Append(CQApi.CQCode_Image(picPath));
                     MainSave.CQApi.SendGroupMessage(Convert.ToInt64(id.Name), sb.ToString());
                 }
             }
@@ -148,7 +150,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 {
                     StringBuilder sb = new();
                     sb.Append($"{bangumi.result.title} 更新了新的一集, {epInfo.share_url}");
-                    sb.Append(CQApi.CQCode_Image(picPath));
+                    if(string.IsNullOrEmpty(picPath) is false)
+                        sb.Append(CQApi.CQCode_Image(picPath));
                     MainSave.CQApi.SendGroupMessage(Convert.ToInt64(id.Name), sb.ToString());
                 }
             }
