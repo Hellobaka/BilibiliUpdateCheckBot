@@ -272,10 +272,6 @@
       <Project>{d7a958b3-79d9-49f8-8bb4-9619bab6ecba}</Project>
       <Name>me.cqp.luohuaming.BilibiliUpdateChecker.Sdk</Name>
     </ProjectReference>
-    <ProjectReference Include="..\me.cqp.luohuaming.BilibiliUpdateChecker.UI\me.cqp.luohuaming.BilibiliUpdateChecker.UI.csproj">
-      <Project>{6e9094e7-eb54-4bdd-9caf-eac840e35362}</Project>
-      <Name>me.cqp.luohuaming.BilibiliUpdateChecker.UI</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ImportGroup Label=".NET DllExport">
