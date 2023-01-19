@@ -36,12 +36,12 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add("请填写用户ID或序号");
                 return result;
             }
-            if (!int.TryParse(args, out int uid))
+            if (!long.TryParse(args, out long uid))
             {
                 sendText.MsgToSend.Add("用户ID或序号格式不正确");
                 return result;
             }
-            var streams = JsonConfig.GetConfig<List<int>>("Streams");
+            var streams = JsonConfig.GetConfig<List<long>>("Streams");
             var group = JsonConfig.GetConfig<JObject>("Monitor_Stream");
             if (group.ContainsKey(e.FromGroup))
             {
@@ -50,7 +50,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 {
                     if (groupArr.Count > uid)
                     {
-                        uid = groupArr[uid - 1];
+                        uid = groupArr[(int)uid - 1];
                     }
                     else
                     {

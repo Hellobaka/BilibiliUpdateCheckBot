@@ -36,12 +36,12 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add("请填写用户ID");
                 return result;
             }
-            if(!int.TryParse(args, out int uid))
+            if(!long.TryParse(args, out long uid))
             {
                 sendText.MsgToSend.Add("用户ID格式不正确");
                 return result;
             }
-            var dynamicsList = JsonConfig.GetConfig<List<int>>("Dynamics");
+            var dynamicsList = JsonConfig.GetConfig<List<long>>("Dynamics");
             var group = JsonConfig.GetConfig<JObject>("Monitor_Dynamic");
             if (group.ContainsKey(e.FromGroup))
             {

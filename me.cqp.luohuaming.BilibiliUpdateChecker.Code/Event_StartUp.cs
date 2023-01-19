@@ -124,7 +124,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             }
         }
 
-        private void UpdateChecker_OnDynamic(BilibiliMonitor.Models.DynamicModel.Item item, int uid, string picPath)
+        private void UpdateChecker_OnDynamic(BilibiliMonitor.Models.DynamicModel.Item item, long uid, string picPath)
         {
             var group = JsonConfig.GetConfig<JObject>("Monitor_Dynamic");
             foreach (JProperty id in group.Properties())
