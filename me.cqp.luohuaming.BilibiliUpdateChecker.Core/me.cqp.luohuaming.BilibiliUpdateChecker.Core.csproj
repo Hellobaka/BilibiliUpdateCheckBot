@@ -295,11 +295,8 @@ if exist "$(TargetDir)$(TargetName)\app.json" (del /F /A /Q "$(TargetDir)$(Targe
   <PropertyGroup>
     <PostBuildEvent>if exist "$(TargetDir)$(TargetName).dll" (
 move "$(TargetDir)$(TargetName).dll" "$(TargetDir)$(TargetName)" 
-rename "$(TargetDir)$(TargetName)\$(TargetName).dll" "app.dll" 
 ) 
-if exist "$(TargetDir)app.json" (
-move "$(TargetDir)app.json" "$(TargetDir)$(TargetName)" 
-)</PostBuildEvent>
+</PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
