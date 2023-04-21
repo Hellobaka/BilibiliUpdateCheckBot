@@ -1,17 +1,17 @@
-using System;
+using BilibiliMonitor;
+using BilibiliMonitor.Models;
+using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
+using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.Interface;
-using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
-using System.Reflection;
-using BilibiliMonitor;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Tool;
 using Newtonsoft.Json.Linq;
-using System.Linq;
-using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp;
-using System.IO;
-using System.Text;
-using BilibiliMonitor.Models;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Threading;
 
 namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
@@ -41,7 +41,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                     }
                 }
             }
-            if(!Directory.Exists(Path.Combine(MainSave.AppDirectory, "Assets")))
+            if (!Directory.Exists(Path.Combine(MainSave.AppDirectory, "Assets")))
             {
                 MainSave.CQLog.Warning("资源文件不存在，请放置文件后重载插件");
                 return;
@@ -49,7 +49,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             UpdateChecker update = new(MainSave.AppDirectory, MainSave.ImageDirectory);
             LogHelper.InfoMethod = (type, message, status) =>
             {
-                if(!status)
+                if (!status)
                 {
                     MainSave.CQLog.Warning(type, message);
                 }
@@ -94,7 +94,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             var group = JsonConfig.GetConfig<JObject>("Monitor_Bangumis");
             foreach (JProperty item in group.Properties())
             {
-                if ((item.Value as JArray).Any(x => {
+                if ((item.Value as JArray).Any(x =>
+                {
                     var p = (int)x;
                     return p == sid;
                 }))
@@ -102,7 +103,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                     item.Value.Children().FirstOrDefault(x => x.Value<int>() == sid)?.Remove();
                 }
             }
-            bangumis.Remove(sid); 
+            bangumis.Remove(sid);
             JsonConfig.WriteConfig("Bangumis", bangumis);
             JsonConfig.WriteConfig("Monitor_Bangumis", group);
         }
@@ -110,21 +111,27 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
         private void UpdateChecker_OnStream(LiveStreamsModel.RoomInfo roomInfo, LiveStreamsModel.UserInfo userInfo, string picPath)
         {
             var group = JsonConfig.GetConfig<JObject>("Monitor_Stream");
-            foreach(JProperty id in group.Properties())
+            foreach (JProperty id in group.Properties())
             {
                 var o = id.Value.ToObject<int[]>();
-                if(o.Any(x=>x == userInfo.info.uid))
+                if (o.Any(x => x == userInfo.info.uid))
                 {
                     StringBuilder sb = new();
                     sb.Append($"{userInfo.info.uname} 开播了, https://live.bilibili.com/{roomInfo.room_id}");
                     if (string.IsNullOrEmpty(picPath) is false)
-                        sb.Append(CQApi.CQCode_Image(picPath));
+                    { 
+                        sb.Append(CQApi.CQCode_Image(picPath)); 
+                    }
+                    else
+                    {
+                        sb.Append($"\n{roomInfo.title} - {roomInfo.live_time}");
+                    }
                     MainSave.CQApi.SendGroupMessage(Convert.ToInt64(id.Name), sb.ToString());
                 }
             }
         }
 
-        private void UpdateChecker_OnDynamic(BilibiliMonitor.Models.DynamicModel.Item item, long uid, string picPath)
+        private void UpdateChecker_OnDynamic(DynamicModel.Item item, long uid, string picPath)
         {
             var group = JsonConfig.GetConfig<JObject>("Monitor_Dynamic");
             foreach (JProperty id in group.Properties())
@@ -150,8 +157,14 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 {
                     StringBuilder sb = new();
                     sb.Append($"{bangumi.result.title} 更新了新的一集, {epInfo.share_url}");
-                    if(string.IsNullOrEmpty(picPath) is false)
+                    if (string.IsNullOrEmpty(picPath) is false)
+                    {
                         sb.Append(CQApi.CQCode_Image(picPath));
+                    }
+                    else
+                    {
+                        sb.Append($"\n{epInfo.long_title}");
+                    }
                     MainSave.CQApi.SendGroupMessage(Convert.ToInt64(id.Name), sb.ToString());
                 }
             }
