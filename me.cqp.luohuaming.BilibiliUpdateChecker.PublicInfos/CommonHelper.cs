@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ChromeCookieDecrypt_Framework;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.Model;
+using me.cqp.luohuaming.BilibiliUpdateChecker.Tool;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Tool.IniConfig;
 
 namespace me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos
@@ -38,6 +40,23 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos
             var ImageDirectory = Path.Combine(Environment.CurrentDirectory, "data", "image\\");
             return ImageDirectory;
         }
-        
+
+        public static void UpdateCookie()
+        {
+            try
+            {
+                string cookie = "";
+                var cookies = ChromeCookieDecrypt.QueryCookies(".bilibili.com");
+                foreach (var item in cookies)
+                {
+                    cookie += $"{item.Key}={item.Value};";
+                }
+                JsonConfig.WriteConfig("Cookies", cookie);
+            }
+            catch(Exception ex)
+            {
+                MainSave.CQLog.Error("UpdateCookie", ex.Message + ex.StackTrace);
+            }
+        }
     }
 }
