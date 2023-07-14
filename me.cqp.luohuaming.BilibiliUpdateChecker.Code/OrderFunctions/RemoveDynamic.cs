@@ -59,14 +59,14 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                     }
                 }
 
-                group[e.FromGroup].Children().FirstOrDefault(x => x.Value<int>() == uid)?.Remove();
+                group[e.FromGroup].Children().FirstOrDefault(x => x.Value<long>() == uid)?.Remove();
             }
             JsonConfig.WriteConfig("Monitor_Dynamic", group);
             bool existFlag = false;
             foreach(JProperty item in group.Properties())
             {
                 if((item.Value as JArray).Any(x => {
-                    var p = (int)x;
+                    var p = (long)x;
                     return p == uid;
                 }))
                 {

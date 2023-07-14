@@ -67,8 +67,9 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 update.OnBangumi += UpdateChecker_OnBangumi;
                 update.OnBangumiEnd += Update_OnBangumiEnd;
                 JsonConfig.Init(MainSave.AppDirectory);
-                var dynamics = JsonConfig.GetConfig<int[]>("Dynamics");
-                var streams = JsonConfig.GetConfig<int[]>("Streams");
+                CommonHelper.UpdateCookie();
+                var dynamics = JsonConfig.GetConfig<long[]>("Dynamics");
+                var streams = JsonConfig.GetConfig<long[]>("Streams");
                 var bangumis = JsonConfig.GetConfig<int[]>("Bangumis");
                 foreach (var item in dynamics)
                 {
@@ -113,7 +114,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             var group = JsonConfig.GetConfig<JObject>("Monitor_Stream");
             foreach (JProperty id in group.Properties())
             {
-                var o = id.Value.ToObject<int[]>();
+                var o = id.Value.ToObject<long[]>();
                 if (o.Any(x => x == userInfo.info.uid))
                 {
                     StringBuilder sb = new();
@@ -136,7 +137,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             var group = JsonConfig.GetConfig<JObject>("Monitor_Dynamic");
             foreach (JProperty id in group.Properties())
             {
-                var o = id.Value.ToObject<int[]>();
+                var o = id.Value.ToObject<long[]>();
                 if (o.Any(x => x == uid))
                 {
                     StringBuilder sb = new();
