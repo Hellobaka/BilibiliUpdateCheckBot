@@ -24,6 +24,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             MainSave.CQApi = e.CQApi;
             MainSave.CQLog = e.CQLog;
             MainSave.ImageDirectory = CommonHelper.GetAppImageDirectory();
+            JsonConfig.Init(MainSave.AppDirectory);
 
             //这里写处理逻辑
             foreach (var item in Assembly.GetAssembly(typeof(Event_GroupMessage)).GetTypes())
@@ -66,11 +67,10 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 update.OnStream += UpdateChecker_OnStream;
                 update.OnBangumi += UpdateChecker_OnBangumi;
                 update.OnBangumiEnd += Update_OnBangumiEnd;
-                JsonConfig.Init(MainSave.AppDirectory);
                 CommonHelper.UpdateCookie();
-                var dynamics = JsonConfig.GetConfig<long[]>("Dynamics");
-                var streams = JsonConfig.GetConfig<long[]>("Streams");
-                var bangumis = JsonConfig.GetConfig<int[]>("Bangumis");
+                var dynamics = JsonConfig.GetConfig<long[]>("Dynamics", new long[] { });
+                var streams = JsonConfig.GetConfig<long[]>("Streams", new long[] { });
+                var bangumis = JsonConfig.GetConfig<int[]>("Bangumis", new int[] { });
                 foreach (var item in dynamics)
                 {
                     update.AddDynamic(item);
@@ -91,8 +91,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
         private void Update_OnBangumiEnd(BilibiliMonitor.BilibiliAPI.Bangumi bangumi)
         {
             int sid = bangumi.SeasonID;
-            var bangumis = JsonConfig.GetConfig<List<int>>("Bangumis");
-            var group = JsonConfig.GetConfig<JObject>("Monitor_Bangumis");
+            var bangumis = JsonConfig.GetConfig<List<int>>("Bangumis", new());
+            var group = JsonConfig.GetConfig<JObject>("Monitor_Bangumis", new());
             foreach (JProperty item in group.Properties())
             {
                 if ((item.Value as JArray).Any(x =>
@@ -111,7 +111,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
 
         private void UpdateChecker_OnStream(LiveStreamsModel.RoomInfo roomInfo, LiveStreamsModel.UserInfo userInfo, string picPath)
         {
-            var group = JsonConfig.GetConfig<JObject>("Monitor_Stream");
+            var group = JsonConfig.GetConfig<JObject>("Monitor_Stream", new());
             foreach (JProperty id in group.Properties())
             {
                 var o = id.Value.ToObject<long[]>();
@@ -134,7 +134,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
 
         private void UpdateChecker_OnDynamic(DynamicModel.Item item, long uid, string picPath)
         {
-            var group = JsonConfig.GetConfig<JObject>("Monitor_Dynamic");
+            var group = JsonConfig.GetConfig<JObject>("Monitor_Dynamic", new());
             foreach (JProperty id in group.Properties())
             {
                 var o = id.Value.ToObject<long[]>();
@@ -150,7 +150,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
         }
         private void UpdateChecker_OnBangumi(BangumiModel.DetailInfo bangumi, BangumiModel.Episode epInfo, string picPath)
         {
-            var group = JsonConfig.GetConfig<JObject>("Monitor_Bangumis");
+            var group = JsonConfig.GetConfig<JObject>("Monitor_Bangumis", new());
             foreach (JProperty id in group.Properties())
             {
                 var o = id.Value.ToObject<int[]>();

@@ -41,8 +41,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add("用户ID格式不正确");
                 return result;
             }
-            var dynamicsList = JsonConfig.GetConfig<List<long>>("Dynamics");
-            var group = JsonConfig.GetConfig<JObject>("Monitor_Dynamic");
+            var dynamicsList = JsonConfig.GetConfig<List<long>>("Dynamics", new());
+            var group = JsonConfig.GetConfig<JObject>("Monitor_Dynamic", new());
             if (group.ContainsKey(e.FromGroup))
             {
                 if (group[e.FromGroup].Contains(uid) && dynamicsList.Any(x => x == e.FromGroup))

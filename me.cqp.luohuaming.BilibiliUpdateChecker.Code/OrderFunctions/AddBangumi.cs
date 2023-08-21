@@ -42,8 +42,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add("番剧sid格式不正确");
                 return result;
             }
-            var bangumisList = JsonConfig.GetConfig<List<int>>("Bangumis");
-            var group = JsonConfig.GetConfig<JObject>("Monitor_Bangumis");
+            var bangumisList = JsonConfig.GetConfig<List<int>>("Bangumis", new());
+            var group = JsonConfig.GetConfig<JObject>("Monitor_Bangumis", new());
             Bangumi ban = null;
             if(!bangumisList.Any(x=>x == sid))
             {

@@ -41,9 +41,9 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add("番剧sid或序号格式不正确");
                 return result;
             }
-            var bangumis = JsonConfig.GetConfig<List<int>>("Bangumis");
+            var bangumis = JsonConfig.GetConfig<List<int>>("Bangumis", new());
             
-            var group = JsonConfig.GetConfig<JObject>("Monitor_Bangumis");
+            var group = JsonConfig.GetConfig<JObject>("Monitor_Bangumis", new());
             if (group.ContainsKey(e.FromGroup))
             {
                 var groupArr = group[e.FromGroup].ToObject<List<int>>();

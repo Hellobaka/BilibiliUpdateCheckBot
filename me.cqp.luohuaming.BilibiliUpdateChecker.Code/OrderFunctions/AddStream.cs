@@ -42,8 +42,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add("用户ID格式不正确");
                 return result;
             }
-            var streams = JsonConfig.GetConfig<List<long>>("Streams");
-            var group = JsonConfig.GetConfig<JObject>("Monitor_Stream");
+            var streams = JsonConfig.GetConfig<List<long>>("Streams", new());
+            var group = JsonConfig.GetConfig<JObject>("Monitor_Stream", new());
             if (group.ContainsKey(e.FromGroup))
             {
                 if (group[e.FromGroup].Contains(uid) && streams.Any(x => x == e.FromGroup))

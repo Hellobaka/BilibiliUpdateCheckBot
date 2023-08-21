@@ -37,15 +37,15 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
         }
         public static bool BlockerHandler(long group)
         {
-            int mode = JsonConfig.GetConfig<int>("Mode");
+            int mode = JsonConfig.GetConfig<int>("Mode", 0);
             List<long> ls = null;
             switch (mode)
             {
                 case 0:
-                    ls = JsonConfig.GetConfig<List<long>>("WhiteList");
+                    ls = JsonConfig.GetConfig<List<long>>("WhiteList", new());
                     return ls.Any(x => x == group);
                 case 1:
-                    ls = JsonConfig.GetConfig<List<long>>("BlackList");
+                    ls = JsonConfig.GetConfig<List<long>>("BlackList", new());
                     return ls.Any(x => x != group);
                 default:
                     break;

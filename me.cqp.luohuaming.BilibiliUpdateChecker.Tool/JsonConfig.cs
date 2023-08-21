@@ -21,32 +21,68 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Tool
         /// <param name="sectionName">需要读取的配置键名</param>
         /// <typeparam name="T">类型</typeparam>
         /// <returns>目标类型的配置</returns>
-        public static T GetConfig<T>(string sectionName)
+        public static T GetConfig<T>(string sectionName, T defaultValue)
         {
             lock (lockObject)
             {
                 if (File.Exists(ConfigFileName) is false)
+                {
                     File.WriteAllText(ConfigFileName, "{}");
+                }
+
                 var o = JObject.Parse(File.ReadAllText(ConfigFileName));
                 if (o.ContainsKey(sectionName))
+                {
                     return o[sectionName]!.ToObject<T>();
+                }
+
+                if (defaultValue != null)
+                {
+                    WriteConfig<T>(sectionName, defaultValue);
+                    return defaultValue;
+                }
+
                 if (typeof(T) == typeof(string))
+                {
                     return (T)(object)"";
+                }
+
                 if (typeof(T) == typeof(int))
+                {
                     return (T)(object)0;
+                }
+
                 if (typeof(T) == typeof(bool))
+                {
                     return (T)(object)false;
+                }
+
                 if (typeof(T) == typeof(object))
+                {
                     return (T)(object)new { };
+                }
+
                 if (typeof(T) == typeof(int[]))
+                {
                     return (T)(object)new int[] { };
+                }
+
+                if (typeof(T) == typeof(long[]))
+                {
+                    return (T)(object)new long[] { };
+                }
+
                 if (typeof(T) == typeof(List<int>))
+                {
                     return (T)(object)new List<int> { };
+                }
+
                 if (typeof(T) == typeof(List<long>))
+                {
                     return (T)(object)new List<long> { };
-                if (typeof(T) == typeof(JObject))
-                    return (T)(object)new JObject();
-                throw new Exception("无法默认返回");
+                }
+
+                return typeof(T) == typeof(JObject) ? (T)(object)new JObject() : throw new Exception("无法默认返回");
             }
         }
         public static void WriteConfig<T>(string sectionName, T value)
@@ -54,7 +90,10 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Tool
             lock (lockObject)
             {
                 if (File.Exists(ConfigFileName) is false)
+                {
                     File.WriteAllText(ConfigFileName, "{}");
+                }
+
                 var o = JObject.Parse(File.ReadAllText(ConfigFileName));
                 if (o.ContainsKey(sectionName))
                 {
@@ -70,7 +109,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Tool
         public static void Init(string basePath)
         {
             ConfigFileName = Path.Combine(basePath, "Config.json");
-            if(!File.Exists(ConfigFileName))
+            if (!File.Exists(ConfigFileName))
             {
                 File.WriteAllText(ConfigFileName, "{}");
             }
