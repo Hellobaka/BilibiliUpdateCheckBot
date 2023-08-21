@@ -52,6 +52,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos
                     cookie += $"{item.Key}={item.Value};";
                 }
                 JsonConfig.WriteConfig("Cookies", cookie);
+                BilibiliMonitor.UpdateChecker.Instance.Cookies = cookie;
             }
             catch(Exception ex)
             {
