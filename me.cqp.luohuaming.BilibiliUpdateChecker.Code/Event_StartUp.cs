@@ -60,6 +60,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 }
             };
             MainSave.UpdateChecker = update;
+            MainSave.UpdateChecker.DebugMode = JsonConfig.GetConfig("DebugMode", false);
             new Thread(() =>
             {
                 update.DynamicCheckCD = 2;
