@@ -1,7 +1,7 @@
-﻿using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
+﻿using BilibiliMonitor.BilibiliAPI;
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
-using BilibiliMonitor.BilibiliAPI;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp;
+using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
 using System.Text.RegularExpressions;
 
 namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
@@ -19,12 +19,12 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
 
         public FunctionResult Progress(CQGroupMessageEventArgs e)//群聊处理
         {
-            FunctionResult result = new FunctionResult
+            FunctionResult result = new()
             {
                 Result = true,
                 SendFlag = true,
             };
-            SendText sendText = new SendText
+            SendText sendText = new()
             {
                 SendID = e.FromGroup,
             };
@@ -38,7 +38,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             else
             {
                 string t = Regex.Replace(e.Message.Text, "\\[CQ:.*\\]", "");
-                vid = Videos.ParseURL(t); 
+                vid = Videos.ParseURL(t);
             }
             if (string.IsNullOrEmpty(vid))
             {
@@ -51,7 +51,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add(CQApi.CQCode_Image(Videos.DrawVideoPic(vid)).ToString());
                 if (e.Message.Text.Contains("b23.tv"))
                 {
-                    if(int.TryParse(vid, out int aid))
+                    if (int.TryParse(vid, out int aid))
                     {
                         sendText.MsgToSend.Add($"https://www.bilibili.com/video/av{aid}");
                     }
@@ -71,12 +71,12 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
 
         public FunctionResult Progress(CQPrivateMessageEventArgs e)//私聊处理
         {
-            FunctionResult result = new FunctionResult
+            FunctionResult result = new()
             {
                 Result = false,
                 SendFlag = false,
             };
-            SendText sendText = new SendText
+            SendText sendText = new()
             {
                 SendID = e.FromQQ,
             };

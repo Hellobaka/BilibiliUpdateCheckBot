@@ -62,27 +62,15 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Tool
                     return (T)(object)new { };
                 }
 
-                if (typeof(T) == typeof(int[]))
-                {
-                    return (T)(object)new int[] { };
-                }
-
-                if (typeof(T) == typeof(long[]))
-                {
-                    return (T)(object)new long[] { };
-                }
-
-                if (typeof(T) == typeof(List<int>))
-                {
-                    return (T)(object)new List<int> { };
-                }
-
-                if (typeof(T) == typeof(List<long>))
-                {
-                    return (T)(object)new List<long> { };
-                }
-
-                return typeof(T) == typeof(JObject) ? (T)(object)new JObject() : throw new Exception("无法默认返回");
+                return typeof(T) == typeof(int[])
+                    ? (T)(object)new int[] { }
+                    : typeof(T) == typeof(long[])
+                    ? (T)(object)new long[] { }
+                    : typeof(T) == typeof(List<int>)
+                    ? (T)(object)new List<int> { }
+                    : typeof(T) == typeof(List<long>)
+                    ? (T)(object)new List<long> { }
+                    : typeof(T) == typeof(JObject) ? (T)(object)new JObject() : throw new Exception("无法默认返回");
             }
         }
         public static void WriteConfig<T>(string sectionName, T value)

@@ -1,10 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Code;
+using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.Interface;
-using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
 
 namespace me.cqp.luohuaming.BilibiliUpdateChecker.Core
 {

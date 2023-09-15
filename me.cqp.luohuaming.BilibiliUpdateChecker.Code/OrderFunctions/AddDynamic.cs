@@ -1,42 +1,40 @@
+using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
+using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
+using me.cqp.luohuaming.BilibiliUpdateChecker.Tool;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
-using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
-using me.cqp.luohuaming.BilibiliUpdateChecker.Tool;
-using Newtonsoft.Json.Linq;
 
 namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
 {
     public class AddDynamic : IOrderModel
     {
         public bool ImplementFlag { get; set; } = true;
-        
+
         public string GetOrderStr() => "#添加动态";
 
         public bool Judge(string destStr) => destStr.Replace("＃", "#").StartsWith(GetOrderStr());//这里判断是否能触发指令
 
         public FunctionResult Progress(CQGroupMessageEventArgs e)//群聊处理
         {
-            FunctionResult result = new FunctionResult
+            FunctionResult result = new()
             {
                 Result = true,
                 SendFlag = true,
             };
-            SendText sendText = new SendText
+            SendText sendText = new()
             {
                 SendID = e.FromGroup,
             };
             result.SendObject.Add(sendText);
             var args = e.Message.Text.Replace(GetOrderStr(), "");
-            if(string.IsNullOrEmpty(args))
+            if (string.IsNullOrEmpty(args))
             {
                 sendText.MsgToSend.Add("请填写用户ID");
                 return result;
             }
-            if(!long.TryParse(args, out long uid))
+            if (!long.TryParse(args, out long uid))
             {
                 sendText.MsgToSend.Add("用户ID格式不正确");
                 return result;
@@ -58,10 +56,10 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 group.Add(new JProperty(e.FromGroup, new JArray(uid)));
             }
             JsonConfig.WriteConfig("Monitor_Dynamic", group);
-            if(!dynamicsList.Any(x=>x == uid))
+            if (!dynamicsList.Any(x => x == uid))
             {
                 dynamicsList.Add(uid);
-                var dy = MainSave.UpdateChecker.AddDynamic(uid);                
+                var dy = MainSave.UpdateChecker.AddDynamic(uid);
                 JsonConfig.WriteConfig("Dynamics", dynamicsList);
             }
             var c = MainSave.UpdateChecker.GetDynamic(uid);
@@ -76,15 +74,15 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
 
             return result;
         }
-        
+
         public FunctionResult Progress(CQPrivateMessageEventArgs e)//私聊处理
         {
-            FunctionResult result = new FunctionResult
+            FunctionResult result = new()
             {
                 Result = false,
                 SendFlag = false,
             };
-            SendText sendText = new SendText
+            SendText sendText = new()
             {
                 SendID = e.FromQQ,
             };

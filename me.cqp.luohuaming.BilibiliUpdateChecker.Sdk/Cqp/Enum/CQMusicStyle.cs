@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.Enum
+﻿namespace me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.Enum
 {
     /// <summary>
     /// 指示分享音乐时使用的分享卡片样式

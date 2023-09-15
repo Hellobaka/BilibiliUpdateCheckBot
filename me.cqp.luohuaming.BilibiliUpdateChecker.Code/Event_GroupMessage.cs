@@ -1,11 +1,9 @@
-﻿using System;
+﻿using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
+using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
+using me.cqp.luohuaming.BilibiliUpdateChecker.Tool;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
-using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
-using me.cqp.luohuaming.BilibiliUpdateChecker.Tool;
 
 namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
 {
@@ -13,13 +11,13 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
     {
         public static FunctionResult GroupMessage(CQGroupMessageEventArgs e)
         {
-            FunctionResult result = new FunctionResult()
+            FunctionResult result = new()
             {
                 SendFlag = false
             };
             try
             {
-                if(BlockerHandler(e.FromGroup) is false)
+                if (BlockerHandler(e.FromGroup) is false)
                 {
                     return result;
                 }
@@ -35,6 +33,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 return result;
             }
         }
+
         public static bool BlockerHandler(long group)
         {
             int mode = JsonConfig.GetConfig<int>("Mode", 0);
@@ -44,9 +43,11 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 case 0:
                     ls = JsonConfig.GetConfig<List<long>>("WhiteList", new());
                     return ls.Any(x => x == group);
+
                 case 1:
                     ls = JsonConfig.GetConfig<List<long>>("BlackList", new());
                     return ls.Any(x => x != group);
+
                 default:
                     break;
             }

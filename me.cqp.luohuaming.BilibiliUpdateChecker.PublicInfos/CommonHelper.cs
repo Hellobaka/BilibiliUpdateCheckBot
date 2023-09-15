@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ChromeCookieDecrypt_Framework;
+﻿using ChromeCookieDecrypt_Framework;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.Model;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Tool;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Tool.IniConfig;
+using System;
+using System.IO;
 
 namespace me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos
 {
@@ -23,6 +18,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos
             TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
             return Convert.ToInt64(ts.TotalSeconds);
         }
+
         /// <summary>
         /// 获取CQ码中的图片网址
         /// </summary>
@@ -35,6 +31,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos
             image.Load();
             return image.Object["image"]["url"].ToString();
         }
+
         public static string GetAppImageDirectory()
         {
             var ImageDirectory = Path.Combine(Environment.CurrentDirectory, "data", "image\\");
@@ -54,7 +51,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos
                 JsonConfig.WriteConfig("Cookies", cookie);
                 BilibiliMonitor.UpdateChecker.Instance.Cookies = cookie;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MainSave.CQLog.Error("UpdateCookie", ex.Message + ex.StackTrace);
             }

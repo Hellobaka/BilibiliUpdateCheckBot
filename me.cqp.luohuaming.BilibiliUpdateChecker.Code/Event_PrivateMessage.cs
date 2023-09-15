@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
+using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
+using System;
+using System.Linq;
 
 namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
 {
@@ -12,7 +9,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
     {
         public static FunctionResult PrivateMessage(CQPrivateMessageEventArgs e)
         {
-            FunctionResult result = new FunctionResult()
+            FunctionResult result = new()
             {
                 SendFlag = false
             };

@@ -30,14 +30,20 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             foreach (var item in Assembly.GetAssembly(typeof(Event_GroupMessage)).GetTypes())
             {
                 if (item.IsInterface)
+                {
                     continue;
+                }
+
                 foreach (var instance in item.GetInterfaces())
                 {
                     if (instance == typeof(IOrderModel))
                     {
                         IOrderModel obj = (IOrderModel)Activator.CreateInstance(item);
                         if (obj.ImplementFlag == false)
+                        {
                             break;
+                        }
+
                         MainSave.Instances.Add(obj);
                     }
                 }
@@ -121,8 +127,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                     StringBuilder sb = new();
                     sb.Append($"{userInfo.info.uname} 开播了, https://live.bilibili.com/{roomInfo.room_id}");
                     if (string.IsNullOrEmpty(picPath) is false)
-                    { 
-                        sb.Append(CQApi.CQCode_Image(picPath)); 
+                    {
+                        sb.Append(CQApi.CQCode_Image(picPath));
                     }
                     else
                     {
@@ -144,11 +150,15 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                     StringBuilder sb = new();
                     sb.Append($"{item.modules.module_author.name} 更新了动态, https://t.bilibili.com/{item.id_str}");
                     if (string.IsNullOrEmpty(picPath) is false)
+                    {
                         sb.Append(CQApi.CQCode_Image(picPath));
+                    }
+
                     MainSave.CQApi.SendGroupMessage(Convert.ToInt64(id.Name), sb.ToString());
                 }
             }
         }
+
         private void UpdateChecker_OnBangumi(BangumiModel.DetailInfo bangumi, BangumiModel.Episode epInfo, string picPath)
         {
             var group = JsonConfig.GetConfig<JObject>("Monitor_Bangumis", new());

@@ -1,21 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace me.cqp.luohuaming.BilibiliUpdateChecker.Tool.IniConfig.Utilities
 {
-	internal class ReflectionUtils
-	{
-		internal static bool IsNullableType (Type t)
-		{
-			if (t == null)
-			{
-				throw new ArgumentNullException ("t");
-			}
-
-			return t.IsGenericType && t.GetGenericTypeDefinition () == typeof (Nullable<>);
-		}
-	}
+    internal class ReflectionUtils
+    {
+        internal static bool IsNullableType(Type t)
+        {
+            return t == null ? throw new ArgumentNullException("t") : t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Nullable<>);
+        }
+    }
 }
