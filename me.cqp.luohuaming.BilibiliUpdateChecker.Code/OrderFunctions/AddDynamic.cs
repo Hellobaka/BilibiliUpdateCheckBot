@@ -1,6 +1,5 @@
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
-using me.cqp.luohuaming.BilibiliUpdateChecker.Tool;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -39,8 +38,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add("用户ID格式不正确");
                 return result;
             }
-            var dynamicsList = JsonConfig.GetConfig<List<long>>("Dynamics", new());
-            var group = JsonConfig.GetConfig<JObject>("Monitor_Dynamic", new());
+            var dynamicsList = AppConfig.Instance.GetConfig<List<long>>("Dynamics", new());
+            var group = AppConfig.Instance.GetConfig<JObject>("Monitor_Dynamic", new());
             if (group.ContainsKey(e.FromGroup))
             {
                 if (group[e.FromGroup].Contains(uid) && dynamicsList.Any(x => x == e.FromGroup))
@@ -55,12 +54,12 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             {
                 group.Add(new JProperty(e.FromGroup, new JArray(uid)));
             }
-            JsonConfig.WriteConfig("Monitor_Dynamic", group);
+            AppConfig.Instance.SetConfig("Monitor_Dynamic", group);
             if (!dynamicsList.Any(x => x == uid))
             {
                 dynamicsList.Add(uid);
                 var dy = MainSave.UpdateChecker.AddDynamic(uid);
-                JsonConfig.WriteConfig("Dynamics", dynamicsList);
+                AppConfig.Instance.SetConfig("Dynamics", dynamicsList);
             }
             var c = MainSave.UpdateChecker.GetDynamic(uid);
             if (c != null)

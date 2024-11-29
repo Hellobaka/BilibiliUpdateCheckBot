@@ -1,6 +1,4 @@
 ﻿using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.Model;
-using me.cqp.luohuaming.BilibiliUpdateChecker.Tool;
-using me.cqp.luohuaming.BilibiliUpdateChecker.Tool.IniConfig;
 using System;
 using System.IO;
 
@@ -16,19 +14,6 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos
         {
             TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
             return Convert.ToInt64(ts.TotalSeconds);
-        }
-
-        /// <summary>
-        /// 获取CQ码中的图片网址
-        /// </summary>
-        /// <param name="imageCQCode">需要解析的图片CQ码</param>
-        /// <returns></returns>
-        public static string GetImageURL(string imageCQCode)
-        {
-            string path = MainSave.ImageDirectory + CQCode.Parse(imageCQCode)[0].Items["file"] + ".cqimg";
-            IniConfig image = new IniConfig(path);
-            image.Load();
-            return image.Object["image"]["url"].ToString();
         }
 
         public static string GetAppImageDirectory()

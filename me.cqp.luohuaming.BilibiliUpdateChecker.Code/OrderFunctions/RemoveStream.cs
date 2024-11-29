@@ -1,6 +1,5 @@
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
-using me.cqp.luohuaming.BilibiliUpdateChecker.Tool;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,8 +37,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add("用户ID或序号格式不正确");
                 return result;
             }
-            var streams = JsonConfig.GetConfig<List<long>>("Streams", new());
-            var group = JsonConfig.GetConfig<JObject>("Monitor_Stream", new());
+            var streams = AppConfig.Instance.GetConfig<List<long>>("Streams", new());
+            var group = AppConfig.Instance.GetConfig<JObject>("Monitor_Stream", new());
             if (group.ContainsKey(e.FromGroup))
             {
                 var groupArr = group[e.FromGroup].ToObject<List<int>>();
@@ -58,7 +57,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
 
                 group[e.FromGroup].Children().FirstOrDefault(x => x.Value<int>() == uid)?.Remove();
             }
-            JsonConfig.WriteConfig("Monitor_Stream", group);
+            AppConfig.Instance.SetConfig("Monitor_Stream", group);
             bool existFlag = false;
             foreach (JProperty item in group.Properties())
             {
@@ -75,7 +74,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             {
                 streams.Remove(uid);
                 MainSave.UpdateChecker.RemoveStream(uid);
-                JsonConfig.WriteConfig("Streams", streams);
+                AppConfig.Instance.SetConfig("Streams", streams);
             }
             sendText.MsgToSend.Add("删除成功");
             return result;

@@ -1,6 +1,5 @@
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
-using me.cqp.luohuaming.BilibiliUpdateChecker.Tool;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Text;
@@ -31,7 +30,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             int index = 1;
             foreach (var item in MainSave.UpdateChecker.GetBangumiList())
             {
-                var group = JsonConfig.GetConfig<JObject>("Monitor_Bangumis", new());
+                var group = AppConfig.Instance.GetConfig<JObject>("Monitor_Bangumis", new());
                 if (group.ContainsKey(e.FromGroup) && group[e.FromGroup].Any(x => x.Value<int>() == item.Item1))
                 {
                     sb.AppendLine($"{index}. {item.Item2} - {item.Item1}");

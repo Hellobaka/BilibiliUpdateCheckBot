@@ -1,7 +1,6 @@
 using BilibiliMonitor.BilibiliAPI;
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
-using me.cqp.luohuaming.BilibiliUpdateChecker.Tool;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -40,8 +39,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add("番剧sid格式不正确");
                 return result;
             }
-            var bangumisList = JsonConfig.GetConfig<List<int>>("Bangumis", new());
-            var group = JsonConfig.GetConfig<JObject>("Monitor_Bangumis", new());
+            var bangumisList = AppConfig.Instance.GetConfig<List<int>>("Bangumis", new());
+            var group = AppConfig.Instance.GetConfig<JObject>("Monitor_Bangumis", new());
             Bangumi ban = null;
             if (!bangumisList.Any(x => x == sid))
             {
@@ -63,8 +62,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             }
             if (ban != null)
             {
-                JsonConfig.WriteConfig("Bangumis", bangumisList);
-                JsonConfig.WriteConfig("Monitor_Bangumis", group);
+                AppConfig.Instance.SetConfig("Bangumis", bangumisList);
+                AppConfig.Instance.SetConfig("Monitor_Bangumis", group);
 
                 sendText.MsgToSend.Add($"{ban.Name} 添加番剧更新检查成功");
             }

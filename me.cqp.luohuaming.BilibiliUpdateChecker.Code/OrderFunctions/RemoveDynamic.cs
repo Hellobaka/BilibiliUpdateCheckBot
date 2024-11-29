@@ -1,6 +1,5 @@
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
-using me.cqp.luohuaming.BilibiliUpdateChecker.Tool;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,8 +37,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add("用户ID或序号格式不正确");
                 return result;
             }
-            var dynamics = JsonConfig.GetConfig<List<long>>("Dynamics", new());
-            var group = JsonConfig.GetConfig<JObject>("Monitor_Dynamic", new());
+            var dynamics = AppConfig.Instance.GetConfig<List<long>>("Dynamics", new());
+            var group = AppConfig.Instance.GetConfig<JObject>("Monitor_Dynamic", new());
             if (group.ContainsKey(e.FromGroup))
             {
                 var groupArr = group[e.FromGroup].ToObject<List<long>>();
@@ -58,7 +57,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
 
                 group[e.FromGroup].Children().FirstOrDefault(x => x.Value<long>() == uid)?.Remove();
             }
-            JsonConfig.WriteConfig("Monitor_Dynamic", group);
+            AppConfig.Instance.SetConfig("Monitor_Dynamic", group);
             bool existFlag = false;
             foreach (JProperty item in group.Properties())
             {
@@ -75,7 +74,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             {
                 dynamics.Remove(uid);
                 MainSave.UpdateChecker.RemoveDynamic(uid);
-                JsonConfig.WriteConfig("Dynamics", dynamics);
+                AppConfig.Instance.SetConfig("Dynamics", dynamics);
             }
             sendText.MsgToSend.Add("删除成功");
             return result;

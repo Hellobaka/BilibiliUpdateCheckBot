@@ -1,7 +1,6 @@
 using BilibiliMonitor.BilibiliAPI;
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
-using me.cqp.luohuaming.BilibiliUpdateChecker.Tool;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -40,8 +39,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add("用户ID格式不正确");
                 return result;
             }
-            var streams = JsonConfig.GetConfig<List<long>>("Streams", new());
-            var group = JsonConfig.GetConfig<JObject>("Monitor_Stream", new());
+            var streams = AppConfig.Instance.GetConfig<List<long>>("Streams", new());
+            var group = AppConfig.Instance.GetConfig<JObject>("Monitor_Stream", new());
             if (group.ContainsKey(e.FromGroup))
             {
                 if (group[e.FromGroup].Contains(uid) && streams.Any(x => x == e.FromGroup))
@@ -56,13 +55,13 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             {
                 group.Add(new JProperty(e.FromGroup, new JArray(uid)));
             }
-            JsonConfig.WriteConfig("Monitor_Stream", group);
+            AppConfig.Instance.SetConfig("Monitor_Stream", group);
             LiveStreams live = null;
             if (!streams.Any(x => x == uid))
             {
                 streams.Add(uid);
                 live = MainSave.UpdateChecker.AddStream(uid);
-                JsonConfig.WriteConfig("Streams", streams);
+                AppConfig.Instance.SetConfig("Streams", streams);
             }
             if (live != null)
             {

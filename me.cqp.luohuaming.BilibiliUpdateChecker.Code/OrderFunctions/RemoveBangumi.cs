@@ -1,6 +1,5 @@
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
-using me.cqp.luohuaming.BilibiliUpdateChecker.Tool;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,9 +37,9 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add("番剧sid或序号格式不正确");
                 return result;
             }
-            var bangumis = JsonConfig.GetConfig<List<int>>("Bangumis", new());
+            var bangumis = AppConfig.Instance.GetConfig<List<int>>("Bangumis", new());
 
-            var group = JsonConfig.GetConfig<JObject>("Monitor_Bangumis", new());
+            var group = AppConfig.Instance.GetConfig<JObject>("Monitor_Bangumis", new());
             if (group.ContainsKey(e.FromGroup))
             {
                 var groupArr = group[e.FromGroup].ToObject<List<int>>();
@@ -58,7 +57,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 }
                 group[e.FromGroup].Children().FirstOrDefault(x => x.Value<int>() == sid)?.Remove();
             }
-            JsonConfig.WriteConfig("Monitor_Bangumis", group);
+            AppConfig.Instance.SetConfig("Monitor_Bangumis", group);
             bool existFlag = false;
             foreach (JProperty item in group.Properties())
             {
@@ -75,7 +74,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             {
                 bangumis.Remove(sid);
                 MainSave.UpdateChecker.RemoveBangumi(sid);
-                JsonConfig.WriteConfig("Bangumis", bangumis);
+                AppConfig.Instance.SetConfig("Bangumis", bangumis);
             }
             sendText.MsgToSend.Add("删除成功");
             return result;

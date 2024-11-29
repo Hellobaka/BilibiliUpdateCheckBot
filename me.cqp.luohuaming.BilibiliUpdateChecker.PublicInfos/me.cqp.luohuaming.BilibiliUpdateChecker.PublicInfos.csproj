@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <LangVersion>12</LangVersion>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -39,7 +40,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
@@ -48,7 +48,6 @@
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
-    <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
@@ -99,29 +98,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppConfig.cs" />
     <Compile Include="CommonHelper.cs" />
+    <Compile Include="ConfigBase.cs" />
     <Compile Include="FunctionResult.cs" />
     <Compile Include="MainSave.cs" />
     <Compile Include="Models.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\BilibiliMonitor\BilibiliMonitor\BilibiliMonitor.csproj">
-      <Project>{ca98007d-0d9e-4023-9d7d-74c3f307fa8b}</Project>
+    <ProjectReference Include="..\BilibiliMonitor\BilibiliMonitor\BilibiliMonitor.csproj">
+      <Project>{8126c0f4-c32a-4b95-8fdd-32977cc38f2c}</Project>
       <Name>BilibiliMonitor</Name>
     </ProjectReference>
     <ProjectReference Include="..\me.cqp.luohuaming.BilibiliUpdateChecker.Sdk\me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.csproj">
       <Project>{d7a958b3-79d9-49f8-8bb4-9619bab6ecba}</Project>
       <Name>me.cqp.luohuaming.BilibiliUpdateChecker.Sdk</Name>
     </ProjectReference>
-    <ProjectReference Include="..\me.cqp.luohuaming.BilibiliUpdateChecker.Tool\me.cqp.luohuaming.BilibiliUpdateChecker.Tool.csproj">
-      <Project>{0ca93eb9-4e25-46c6-94d2-0f97137a1606}</Project>
-      <Name>me.cqp.luohuaming.BilibiliUpdateChecker.Tool</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
