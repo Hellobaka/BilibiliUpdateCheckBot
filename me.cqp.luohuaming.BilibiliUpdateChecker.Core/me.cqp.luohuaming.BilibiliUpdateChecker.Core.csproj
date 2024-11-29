@@ -269,7 +269,13 @@ if exist "$(TargetDir)$(TargetName)\app.json" (del /F /A /Q "$(TargetDir)$(Targe
     <PostBuildEvent>if exist "$(TargetDir)$(TargetName).dll" (
 move "$(TargetDir)$(TargetName).dll" "$(TargetDir)$(TargetName)" 
 ) 
-</PostBuildEvent>
+if exist "$(TargetDir)$(TargetName)\$(TargetName).json" (
+del "$(TargetDir)$(TargetName)\$(TargetName).json"
+)
+if exist "$(TargetDir)app.json" (
+move "$(TargetDir)app.json" "$(TargetDir)$(TargetName)" 
+rename "$(TargetDir)$(TargetName)\app.json" "$(TargetName).json" 
+)</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <DllExportIdent>D63C3FB7-18B9-4CDE-A8F4-F2ACE3FC382F</DllExportIdent>
