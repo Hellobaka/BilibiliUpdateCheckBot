@@ -54,6 +54,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 MainSave.CQLog.Warning("资源文件不存在，请放置文件后重载插件");
                 return;
             }
+            Config.ConfigFileName = appConfig.ConfigPath;
             UpdateChecker update = new(MainSave.AppDirectory, MainSave.ImageDirectory);
             LogHelper.InfoMethod = (type, message, status) =>
             {
