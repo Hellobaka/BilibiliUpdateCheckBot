@@ -103,7 +103,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos
                 {
                     CurrentJObject.Add(sectionName, JToken.FromObject(value));
                 }
-
+                // TODO: 禁用热重载，写入完成后按此前配置启动热重载
                 File.WriteAllText(ConfigPath, CurrentJObject.ToString(Newtonsoft.Json.Formatting.Indented));
             }
         }
