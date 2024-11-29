@@ -74,7 +74,6 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 update.OnStream += UpdateChecker_OnStream;
                 update.OnBangumi += UpdateChecker_OnBangumi;
                 update.OnBangumiEnd += Update_OnBangumiEnd;
-                CommonHelper.UpdateCookie();
                 var dynamics = JsonConfig.GetConfig<long[]>("Dynamics", new long[] { });
                 var streams = JsonConfig.GetConfig<long[]>("Streams", new long[] { });
                 var bangumis = JsonConfig.GetConfig<int[]>("Bangumis", new int[] { });
