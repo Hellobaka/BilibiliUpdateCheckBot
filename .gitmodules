@@ -1,0 +1,3 @@
+[submodule "BilibiliMonitor"]
+	path = BilibiliMonitor
+	url = https://github.com/Hellobaka/BilibiliMonitor.git
