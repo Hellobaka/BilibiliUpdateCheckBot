@@ -9,8 +9,6 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos
 {
     public class AppConfig : ConfigBase
     {
-        // TODO: 移动配置至此类中
-        // TODO: Mode改为枚举类型
         public AppConfig(string path)
             : base(path)
         {
