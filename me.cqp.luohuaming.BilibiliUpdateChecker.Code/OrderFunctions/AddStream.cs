@@ -62,7 +62,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             if (!streams.Any(x => x == uid))
             {
                 streams.Add(uid);
-                live = MainSave.UpdateChecker.AddStream(uid);
+                live = LiveStreams.AddStream(uid);
                 AppConfig.Instance.SetConfig("Streams", streams);
             }
             if (live != null)

@@ -1,3 +1,4 @@
+using BilibiliMonitor.BilibiliAPI;
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos.Models;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
@@ -61,10 +62,10 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             if (!dynamicsList.Any(x => x == uid))
             {
                 dynamicsList.Add(uid);
-                var dy = MainSave.UpdateChecker.AddDynamic(uid);
+                var dy = Dynamics.AddDynamic(uid);
                 AppConfig.Instance.SetConfig("Dynamics", dynamicsList);
             }
-            var c = MainSave.UpdateChecker.GetDynamic(uid);
+            var c = Dynamics.GetDynamic(uid);
             if (c != null)
             {
                 sendText.MsgToSend.Add($"{c.UserName} 添加动态监视成功");

@@ -1,3 +1,4 @@
+using BilibiliMonitor.BilibiliAPI;
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
 using Newtonsoft.Json.Linq;
@@ -70,7 +71,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             if (bangumis.Any(x => x == sid) && !existFlag)
             {
                 bangumis.Remove(sid);
-                MainSave.UpdateChecker.RemoveBangumi(sid);
+                Bangumi.RemoveBangumi(sid);
                 AppConfig.Instance.SetConfig("Bangumis", bangumis);
             }
             sendText.MsgToSend.Add("删除成功");

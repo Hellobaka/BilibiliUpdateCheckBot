@@ -1,3 +1,4 @@
+using BilibiliMonitor.BilibiliAPI;
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
 using Newtonsoft.Json.Linq;
@@ -29,7 +30,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             StringBuilder sb = new();
             sb.AppendLine("动态列表");
             int index = 1;
-            foreach (var item in MainSave.UpdateChecker.GetDynamicList())
+            foreach (var item in Dynamics.GetDynamicList())
             {
                 var group = AppConfig.MonitorDynamics;
                 var groupItem = group.FirstOrDefault(x => x.GroupId == e.FromGroup);

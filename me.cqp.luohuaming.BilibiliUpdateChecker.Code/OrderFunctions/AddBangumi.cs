@@ -46,7 +46,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             if (!bangumisList.Any(x => x == sid))
             {
                 bangumisList.Add(sid);
-                ban = MainSave.UpdateChecker.AddBangumi(sid);
+                ban = Bangumi.AddBangumi(sid);
             }
             var groupItem = group.FirstOrDefault(x=>x.GroupId == e.FromGroup);
             if (groupItem != null)

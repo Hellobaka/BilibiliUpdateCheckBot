@@ -1,9 +1,6 @@
-﻿using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos.Models;
-using System;
+﻿using BilibiliMonitor;
+using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos
 {
@@ -24,8 +21,6 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos
 
         public static List<long> BlackList { get; private set; } = [];
 
-        public static bool DebugMode { get; private set; }
-
         public static List<long> Dynamics { get; private set; } = [];
 
         public static List<long> Streams { get; private set; } = [];
@@ -43,13 +38,20 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos
             FilterType = GetConfig("FilterType", FilterType.WhiteList);
             WhiteList = GetConfig("WhiteList", new List<long>());
             BlackList = GetConfig("BlackList", new List<long>());
-            DebugMode = GetConfig("DebugMode", false);
             Dynamics = GetConfig("Dynamics", new List<long>());
             Streams = GetConfig("Streams", new List<long>());
             Bangumis = GetConfig("Bangumis", new List<long>());
             MonitorDynamics = GetConfig("MonitorDynamics", new List<MonitorItem>());
             MonitorStreams = GetConfig("MonitorStreams", new List<MonitorItem>());
             MonitorBangumis = GetConfig("MonitorBangumis", new List<MonitorItem>());
+
+            Config.Cookies = GetConfig("Cookies", "");
+            Config.RefreshToken = GetConfig("RefreshToken", "");
+            Config.RefreshInterval = GetConfig("RefreshInterval", 120 * 1000);
+            Config.BangumiRetryCount = GetConfig("BangumiRetryCount", 3);
+            Config.BangumiRetryCount = GetConfig("BangumiRetryCount", 3);
+            Config.LiveStreamRetryCount = GetConfig("LiveStreamRetryCount", 3);
+            Config.DebugMode = GetConfig("DebugMode", false);
         }
     }
 }

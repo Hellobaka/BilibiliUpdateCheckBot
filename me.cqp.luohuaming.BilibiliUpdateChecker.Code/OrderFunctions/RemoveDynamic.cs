@@ -1,3 +1,4 @@
+using BilibiliMonitor.BilibiliAPI;
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
 using Newtonsoft.Json.Linq;
@@ -71,7 +72,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             if (dynamics.Any(x => x == uid) && !existFlag)
             {
                 dynamics.Remove(uid);
-                MainSave.UpdateChecker.RemoveDynamic(uid);
+                Dynamics.RemoveDynamic(uid);
                 AppConfig.Instance.SetConfig("Dynamics", dynamics);
             }
             sendText.MsgToSend.Add("删除成功");

@@ -1,3 +1,4 @@
+using BilibiliMonitor.BilibiliAPI;
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
 using Newtonsoft.Json.Linq;
@@ -28,7 +29,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             StringBuilder sb = new();
             sb.AppendLine("番剧列表");
             int index = 1;
-            foreach (var item in MainSave.UpdateChecker.GetBangumiList())
+            foreach (var item in Bangumi.GetBangumiList())
             {
                 var group = AppConfig.MonitorBangumis;
                 var groupItem = group.FirstOrDefault(x => x.GroupId == e.FromGroup);

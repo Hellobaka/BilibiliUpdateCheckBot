@@ -1,4 +1,5 @@
 using BilibiliMonitor;
+using BilibiliMonitor.BilibiliAPI;
 using BilibiliMonitor.Models;
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp;
@@ -26,7 +27,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             AppConfig appConfig = new(Path.Combine(MainSave.AppDirectory, "Config.json"));
             appConfig.LoadConfig();
             appConfig.EnableAutoReload();
-
+            Config.Instance = appConfig;
             //这里写处理逻辑
             foreach (var item in Assembly.GetAssembly(typeof(Event_GroupMessage)).GetTypes())
             {
@@ -54,8 +55,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 MainSave.CQLog.Warning("资源文件不存在，请放置文件后重载插件");
                 return;
             }
-            Config.ConfigFileName = appConfig.ConfigPath;
-            UpdateChecker update = new(MainSave.AppDirectory, MainSave.ImageDirectory);
+            Config.BaseDirectory = MainSave.AppDirectory;
+            Config.PicSaveBasePath = MainSave.ImageDirectory;
             LogHelper.InfoMethod = (type, message, status) =>
             {
                 if (!status)
@@ -67,31 +68,27 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                     MainSave.CQLog.Debug(type, message);
                 }
             };
-            MainSave.UpdateChecker = update;
-            MainSave.UpdateChecker.DebugMode = AppConfig.DebugMode;
             new Thread(() =>
             {
-                update.DynamicCheckCD = 2;
-                update.OnDynamic += UpdateChecker_OnDynamic;
-                update.OnStream += UpdateChecker_OnStream;
-                update.OnBangumi += UpdateChecker_OnBangumi;
-                update.OnBangumiEnd += Update_OnBangumiEnd;
+                Dynamics.OnDynamicUpdated += UpdateChecker_OnDynamic;
+                LiveStreams.OnLiveStreamUpdated += UpdateChecker_OnStream;
+                Bangumi.OnBanguimiUpdated += UpdateChecker_OnBangumi;
+                Bangumi.OnBanguimiEnded += Update_OnBangumiEnd;
                 var dynamics = AppConfig.Dynamics;
                 var streams = AppConfig.Streams;
                 var bangumis = AppConfig.Bangumis;
                 foreach (var item in dynamics)
                 {
-                    update.AddDynamic(item);
+                    Dynamics.AddDynamic(item);
                 }
                 foreach (var item in streams)
                 {
-                    update.AddStream(item);
+                    LiveStreams.AddStream(item);
                 }
                 foreach (var item in bangumis)
                 {
-                    update.AddBangumi(item);
+                    Bangumi.AddBangumi(item);
                 }
-                update.Start();
                 MainSave.CQLog.Info("载入成功", $"监视了 {dynamics.Count} 个动态，{streams.Count} 个直播，{bangumis.Count} 个番剧");
             }).Start();
         }
