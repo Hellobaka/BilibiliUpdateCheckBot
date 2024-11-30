@@ -100,7 +100,6 @@
   <ItemGroup>
     <Compile Include="AppConfig.cs" />
     <Compile Include="CommonHelper.cs" />
-    <Compile Include="ConfigBase.cs" />
     <Compile Include="Models\Enums.cs" />
     <Compile Include="FunctionResult.cs" />
     <Compile Include="MainSave.cs" />
