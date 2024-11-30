@@ -5,9 +5,7 @@ using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.Interface;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -28,7 +26,6 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             appConfig.LoadConfig();
             appConfig.EnableAutoReload();
             Config.Instance = appConfig;
-            //这里写处理逻辑
             foreach (var item in Assembly.GetAssembly(typeof(Event_GroupMessage)).GetTypes())
             {
                 if (item.IsInterface)
@@ -43,7 +40,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                         IOrderModel obj = (IOrderModel)Activator.CreateInstance(item);
                         if (obj.ImplementFlag == false)
                         {
-                            break;
+                            continue;
                         }
 
                         MainSave.Instances.Add(obj);
@@ -74,26 +71,24 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 LiveStreams.OnLiveStreamUpdated += UpdateChecker_OnStream;
                 Bangumi.OnBanguimiUpdated += UpdateChecker_OnBangumi;
                 Bangumi.OnBanguimiEnded += Update_OnBangumiEnd;
-                var dynamics = AppConfig.Dynamics;
-                var streams = AppConfig.Streams;
-                var bangumis = AppConfig.Bangumis;
-                foreach (var item in dynamics)
+
+                foreach (var item in AppConfig.Dynamics)
                 {
                     Dynamics.AddDynamic(item);
                 }
-                foreach (var item in streams)
+                foreach (var item in AppConfig.Streams)
                 {
                     LiveStreams.AddStream(item);
                 }
-                foreach (var item in bangumis)
+                foreach (var item in AppConfig.Bangumis)
                 {
                     Bangumi.AddBangumi(item);
                 }
-                MainSave.CQLog.Info("载入成功", $"监视了 {dynamics.Count} 个动态，{streams.Count} 个直播，{bangumis.Count} 个番剧");
+                MainSave.CQLog.Info("载入成功", $"监视了 {AppConfig.Dynamics.Count} 个动态，{AppConfig.Streams.Count} 个直播，{AppConfig.Bangumis.Count} 个番剧");
             }).Start();
         }
 
-        private void Update_OnBangumiEnd(BilibiliMonitor.BilibiliAPI.Bangumi bangumi)
+        private void Update_OnBangumiEnd(Bangumi bangumi)
         {
             long sid = bangumi.SeasonID;
             var bangumis = AppConfig.Bangumis;

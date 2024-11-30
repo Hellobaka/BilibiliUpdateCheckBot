@@ -49,7 +49,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos
             Config.RefreshToken = GetConfig("RefreshToken", "");
             Config.RefreshInterval = GetConfig("RefreshInterval", 120 * 1000);
             Config.BangumiRetryCount = GetConfig("BangumiRetryCount", 3);
-            Config.BangumiRetryCount = GetConfig("BangumiRetryCount", 3);
+            Config.DynamicRetryCount = GetConfig("DynamicRetryCount", 3);
             Config.LiveStreamRetryCount = GetConfig("LiveStreamRetryCount", 3);
             Config.DebugMode = GetConfig("DebugMode", false);
         }
