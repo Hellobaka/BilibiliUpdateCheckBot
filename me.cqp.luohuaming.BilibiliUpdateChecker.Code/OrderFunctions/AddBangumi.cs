@@ -1,5 +1,6 @@
 using BilibiliMonitor.BilibiliAPI;
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
+using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos.Models;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
 using Newtonsoft.Json.Linq;
 using System;
@@ -39,31 +40,32 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add("番剧sid格式不正确");
                 return result;
             }
-            var bangumisList = AppConfig.Instance.GetConfig<List<int>>("Bangumis", new());
-            var group = AppConfig.Instance.GetConfig<JObject>("Monitor_Bangumis", new());
+            var bangumisList = AppConfig.Bangumis;
+            var group = AppConfig.MonitorBangumis;
             Bangumi ban = null;
             if (!bangumisList.Any(x => x == sid))
             {
                 bangumisList.Add(sid);
                 ban = MainSave.UpdateChecker.AddBangumi(sid);
             }
-            if (group.ContainsKey(e.FromGroup))
+            var groupItem = group.FirstOrDefault(x=>x.GroupId == e.FromGroup);
+            if (groupItem != null)
             {
-                if (group[e.FromGroup].Contains(sid) && bangumisList.Any(x => x == e.FromGroup))
+                if (groupItem.TargetId.Contains(sid) && bangumisList.Any(x => x == e.FromGroup))
                 {
                     sendText.MsgToSend.Add("重复添加");
                     return result;
                 }
-                (group[e.FromGroup] as JArray).Add(sid);
+                groupItem.TargetId.Add(sid);
             }
             else
             {
-                group.Add(new JProperty(e.FromGroup, new JArray(sid)));
+                group.Add(new MonitorItem { GroupId = e.FromGroup, TargetId = [sid] });
             }
             if (ban != null)
             {
                 AppConfig.Instance.SetConfig("Bangumis", bangumisList);
-                AppConfig.Instance.SetConfig("Monitor_Bangumis", group);
+                AppConfig.Instance.SetConfig("MonitorBangumis", group);
 
                 sendText.MsgToSend.Add($"{ban.Name} 添加番剧更新检查成功");
             }

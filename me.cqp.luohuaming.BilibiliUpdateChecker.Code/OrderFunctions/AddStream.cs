@@ -1,5 +1,6 @@
 using BilibiliMonitor.BilibiliAPI;
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
+using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos.Models;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
 using Newtonsoft.Json.Linq;
 using System;
@@ -39,23 +40,24 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add("用户ID格式不正确");
                 return result;
             }
-            var streams = AppConfig.Instance.GetConfig<List<long>>("Streams", new());
-            var group = AppConfig.Instance.GetConfig<JObject>("Monitor_Stream", new());
-            if (group.ContainsKey(e.FromGroup))
+            var streams = AppConfig.Streams;
+            var group = AppConfig.MonitorStreams;
+            var groupItem = group.FirstOrDefault(x => x.GroupId == e.FromGroup);
+            if (groupItem != null)
             {
-                if (group[e.FromGroup].Contains(uid) && streams.Any(x => x == e.FromGroup))
+                if (groupItem.TargetId.Contains(uid) && streams.Any(x => x == e.FromGroup))
                 {
                     sendText.MsgToSend.Add("重复添加");
                     return result;
                 }
 
-                (group[e.FromGroup] as JArray).Add(uid);
+                groupItem.TargetId.Add(uid);
             }
             else
             {
-                group.Add(new JProperty(e.FromGroup, new JArray(uid)));
+                group.Add(new MonitorItem { GroupId = e.FromGroup, TargetId = [uid] });
             }
-            AppConfig.Instance.SetConfig("Monitor_Stream", group);
+            AppConfig.Instance.SetConfig("MonitorStreams", group);
             LiveStreams live = null;
             if (!streams.Any(x => x == uid))
             {

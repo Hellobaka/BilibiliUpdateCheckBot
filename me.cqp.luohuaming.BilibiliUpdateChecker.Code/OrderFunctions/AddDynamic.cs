@@ -1,9 +1,11 @@
 using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos;
+using me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos.Models;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
 {
@@ -38,23 +40,24 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add("用户ID格式不正确");
                 return result;
             }
-            var dynamicsList = AppConfig.Instance.GetConfig<List<long>>("Dynamics", new());
-            var group = AppConfig.Instance.GetConfig<JObject>("Monitor_Dynamic", new());
-            if (group.ContainsKey(e.FromGroup))
+            var dynamicsList = AppConfig.Dynamics;
+            var group = AppConfig.MonitorDynamics;
+            var groupItem = group.FirstOrDefault(x => x.GroupId == e.FromGroup);
+            if (groupItem != null)
             {
-                if (group[e.FromGroup].Contains(uid) && dynamicsList.Any(x => x == e.FromGroup))
+                if (groupItem.TargetId.Contains(uid) && dynamicsList.Any(x => x == e.FromGroup))
                 {
                     sendText.MsgToSend.Add("重复添加");
                     return result;
                 }
 
-                (group[e.FromGroup] as JArray).Add(uid);
+                groupItem.TargetId.Add(uid);
             }
             else
             {
-                group.Add(new JProperty(e.FromGroup, new JArray(uid)));
+                group.Add(new MonitorItem { GroupId = e.FromGroup, TargetId = [uid] });
             }
-            AppConfig.Instance.SetConfig("Monitor_Dynamic", group);
+            AppConfig.Instance.SetConfig("MonitorDynamics", group);
             if (!dynamicsList.Any(x => x == uid))
             {
                 dynamicsList.Add(uid);

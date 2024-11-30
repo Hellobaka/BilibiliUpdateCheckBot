@@ -25,7 +25,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             MainSave.ImageDirectory = CommonHelper.GetAppImageDirectory();
             AppConfig appConfig = new(Path.Combine(MainSave.AppDirectory, "Config.json"));
             appConfig.LoadConfig();
-            // appConfig.EnableAutoReload();
+            appConfig.EnableAutoReload();
 
             //这里写处理逻辑
             foreach (var item in Assembly.GetAssembly(typeof(Event_GroupMessage)).GetTypes())
@@ -68,7 +68,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 }
             };
             MainSave.UpdateChecker = update;
-            MainSave.UpdateChecker.DebugMode = AppConfig.Instance.GetConfig("DebugMode", false);
+            MainSave.UpdateChecker.DebugMode = AppConfig.DebugMode;
             new Thread(() =>
             {
                 update.DynamicCheckCD = 2;
@@ -76,9 +76,9 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 update.OnStream += UpdateChecker_OnStream;
                 update.OnBangumi += UpdateChecker_OnBangumi;
                 update.OnBangumiEnd += Update_OnBangumiEnd;
-                var dynamics = AppConfig.Instance.GetConfig<long[]>("Dynamics", new long[] { });
-                var streams = AppConfig.Instance.GetConfig<long[]>("Streams", new long[] { });
-                var bangumis = AppConfig.Instance.GetConfig<int[]>("Bangumis", new int[] { });
+                var dynamics = AppConfig.Dynamics;
+                var streams = AppConfig.Streams;
+                var bangumis = AppConfig.Bangumis;
                 foreach (var item in dynamics)
                 {
                     update.AddDynamic(item);
@@ -92,38 +92,30 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                     update.AddBangumi(item);
                 }
                 update.Start();
-                MainSave.CQLog.Info("载入成功", $"监视了 {dynamics.Length} 个动态，{streams.Length} 个直播，{bangumis.Length} 个番剧");
+                MainSave.CQLog.Info("载入成功", $"监视了 {dynamics.Count} 个动态，{streams.Count} 个直播，{bangumis.Count} 个番剧");
             }).Start();
         }
 
         private void Update_OnBangumiEnd(BilibiliMonitor.BilibiliAPI.Bangumi bangumi)
         {
-            int sid = bangumi.SeasonID;
-            var bangumis = AppConfig.Instance.GetConfig<List<int>>("Bangumis", new());
-            var group = AppConfig.Instance.GetConfig<JObject>("Monitor_Bangumis", new());
-            foreach (JProperty item in group.Properties())
+            long sid = bangumi.SeasonID;
+            var bangumis = AppConfig.Bangumis;
+            var group = AppConfig.MonitorBangumis;
+            foreach (var item in group)
             {
-                if ((item.Value as JArray).Any(x =>
-                {
-                    var p = (int)x;
-                    return p == sid;
-                }))
-                {
-                    item.Value.Children().FirstOrDefault(x => x.Value<int>() == sid)?.Remove();
-                }
+                item.TargetId.Remove(sid);
             }
             bangumis.Remove(sid);
             AppConfig.Instance.SetConfig("Bangumis", bangumis);
-            AppConfig.Instance.SetConfig("Monitor_Bangumis", group);
+            AppConfig.Instance.SetConfig("MonitorBangumis", group);
         }
 
         private void UpdateChecker_OnStream(LiveStreamsModel.RoomInfo roomInfo, LiveStreamsModel.UserInfo userInfo, string picPath)
         {
-            var group = AppConfig.Instance.GetConfig<JObject>("Monitor_Stream", new());
-            foreach (JProperty id in group.Properties())
+            var group = AppConfig.MonitorStreams;
+            foreach (var id in group)
             {
-                var o = id.Value.ToObject<long[]>();
-                if (o.Any(x => x == userInfo.info.uid))
+                if (id.TargetId.Any(x => x == userInfo.info.uid))
                 {
                     StringBuilder sb = new();
                     sb.Append($"{userInfo.info.uname} 开播了, https://live.bilibili.com/{roomInfo.room_id}");
@@ -135,18 +127,17 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                     {
                         sb.Append($"\n{roomInfo.title} - {roomInfo.live_time}");
                     }
-                    MainSave.CQApi.SendGroupMessage(Convert.ToInt64(id.Name), sb.ToString());
+                    MainSave.CQApi.SendGroupMessage(id.GroupId, sb.ToString());
                 }
             }
         }
 
         private void UpdateChecker_OnDynamic(DynamicModel.Item item, long uid, string picPath)
         {
-            var group = AppConfig.Instance.GetConfig<JObject>("Monitor_Dynamic", new());
-            foreach (JProperty id in group.Properties())
+            var group = AppConfig.MonitorDynamics;
+            foreach (var id in group)
             {
-                var o = id.Value.ToObject<long[]>();
-                if (o.Any(x => x == uid))
+                if (id.TargetId.Any(x => x == uid))
                 {
                     StringBuilder sb = new();
                     sb.Append($"{item.modules.module_author.name} 更新了动态, https://t.bilibili.com/{item.id_str}");
@@ -155,18 +146,17 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                         sb.Append(CQApi.CQCode_Image(picPath));
                     }
 
-                    MainSave.CQApi.SendGroupMessage(Convert.ToInt64(id.Name), sb.ToString());
+                    MainSave.CQApi.SendGroupMessage(id.GroupId, sb.ToString());
                 }
             }
         }
 
         private void UpdateChecker_OnBangumi(BangumiModel.DetailInfo bangumi, BangumiModel.Episode epInfo, string picPath)
         {
-            var group = AppConfig.Instance.GetConfig<JObject>("Monitor_Bangumis", new());
-            foreach (JProperty id in group.Properties())
+            var group = AppConfig.MonitorBangumis;
+            foreach (var id in group)
             {
-                var o = id.Value.ToObject<int[]>();
-                if (o.Any(x => x == Convert.ToInt32(bangumi.result.season_id)))
+                if (id.TargetId.Any(x => x == Convert.ToInt32(bangumi.result.season_id)))
                 {
                     StringBuilder sb = new();
                     sb.Append($"{bangumi.result.title} 更新了新的一集, {epInfo.share_url}");
@@ -178,7 +168,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                     {
                         sb.Append($"\n{epInfo.long_title}");
                     }
-                    MainSave.CQApi.SendGroupMessage(Convert.ToInt64(id.Name), sb.ToString());
+                    MainSave.CQApi.SendGroupMessage(id.GroupId, sb.ToString());
                 }
             }
         }

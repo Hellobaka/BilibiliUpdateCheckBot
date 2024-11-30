@@ -30,8 +30,9 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             int index = 1;
             foreach (var item in MainSave.UpdateChecker.GetStreamList())
             {
-                var group = AppConfig.Instance.GetConfig<JObject>("Monitor_Stream", new());
-                if (group.ContainsKey(e.FromGroup) && group[e.FromGroup].Any(x => x.Value<long>() == item.Item1))
+                var group = AppConfig.MonitorStreams;
+                var groupItem = group.FirstOrDefault(x => x.GroupId == e.FromGroup);
+                if (groupItem != null && groupItem.TargetId.Any(x => x == item.Item1))
                 {
                     sb.AppendLine($"{index}. {item.Item2} - {item.Item1}{(item.Item3 ? "[直播中]" : "")}");
                     index++;

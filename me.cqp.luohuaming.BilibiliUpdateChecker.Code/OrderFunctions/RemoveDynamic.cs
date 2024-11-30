@@ -3,6 +3,7 @@ using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 
 namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
 {
@@ -37,16 +38,16 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add("用户ID或序号格式不正确");
                 return result;
             }
-            var dynamics = AppConfig.Instance.GetConfig<List<long>>("Dynamics", new());
-            var group = AppConfig.Instance.GetConfig<JObject>("Monitor_Dynamic", new());
-            if (group.ContainsKey(e.FromGroup))
+            var dynamics = AppConfig.Dynamics;
+            var group = AppConfig.MonitorDynamics;
+            var groupItem = group.FirstOrDefault(x => x.GroupId == e.FromGroup);
+            if (groupItem != null)
             {
-                var groupArr = group[e.FromGroup].ToObject<List<long>>();
-                if (!groupArr.Any(x => x == uid))
+                if (!groupItem.TargetId.Contains(uid))
                 {
-                    if (groupArr.Count > uid)
+                    if (groupItem.TargetId.Count > uid)
                     {
-                        uid = groupArr[(int)uid - 1];
+                        uid = groupItem.TargetId[(int)uid - 1];
                     }
                     else
                     {
@@ -55,19 +56,16 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                     }
                 }
 
-                group[e.FromGroup].Children().FirstOrDefault(x => x.Value<long>() == uid)?.Remove();
+                groupItem.TargetId.Remove(uid);
             }
-            AppConfig.Instance.SetConfig("Monitor_Dynamic", group);
+            AppConfig.Instance.SetConfig("MonitorDynamics", group);
             bool existFlag = false;
-            foreach (JProperty item in group.Properties())
+            foreach (var item in group)
             {
-                if ((item.Value as JArray).Any(x =>
-                {
-                    var p = (long)x;
-                    return p == uid;
-                }))
+                if (item.TargetId.Contains(uid))
                 {
                     existFlag = true;
+                    break;
                 }
             }
             if (dynamics.Any(x => x == uid) && !existFlag)

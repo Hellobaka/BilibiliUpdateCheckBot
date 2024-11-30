@@ -37,16 +37,16 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add("用户ID或序号格式不正确");
                 return result;
             }
-            var streams = AppConfig.Instance.GetConfig<List<long>>("Streams", new());
-            var group = AppConfig.Instance.GetConfig<JObject>("Monitor_Stream", new());
-            if (group.ContainsKey(e.FromGroup))
+            var streams = AppConfig.Streams;
+            var group = AppConfig.MonitorStreams;
+            var groupItem = group.FirstOrDefault(x => x.GroupId == e.FromGroup);
+            if (groupItem != null)
             {
-                var groupArr = group[e.FromGroup].ToObject<List<int>>();
-                if (!groupArr.Any(x => x == uid))
+                if (!groupItem.TargetId.Contains(uid))
                 {
-                    if (groupArr.Count > uid)
+                    if (groupItem.TargetId.Count > uid)
                     {
-                        uid = groupArr[(int)uid - 1];
+                        uid = groupItem.TargetId[(int)uid - 1];
                     }
                     else
                     {
@@ -55,19 +55,16 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                     }
                 }
 
-                group[e.FromGroup].Children().FirstOrDefault(x => x.Value<int>() == uid)?.Remove();
+                groupItem.TargetId.Remove(uid);
             }
-            AppConfig.Instance.SetConfig("Monitor_Stream", group);
+            AppConfig.Instance.SetConfig("MonitorStreams", group);
             bool existFlag = false;
-            foreach (JProperty item in group.Properties())
+            foreach (var item in group)
             {
-                if ((item.Value as JArray).Any(x =>
-                {
-                    var p = (int)x;
-                    return p == uid;
-                }))
+                if (item.TargetId.Contains(uid))
                 {
                     existFlag = true;
+                    break;
                 }
             }
             if (streams.Any(x => x == uid) && !existFlag)

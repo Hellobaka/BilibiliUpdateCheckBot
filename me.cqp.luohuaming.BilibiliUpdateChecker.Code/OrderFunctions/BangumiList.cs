@@ -30,8 +30,9 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             int index = 1;
             foreach (var item in MainSave.UpdateChecker.GetBangumiList())
             {
-                var group = AppConfig.Instance.GetConfig<JObject>("Monitor_Bangumis", new());
-                if (group.ContainsKey(e.FromGroup) && group[e.FromGroup].Any(x => x.Value<int>() == item.Item1))
+                var group = AppConfig.MonitorBangumis;
+                var groupItem = group.FirstOrDefault(x => x.GroupId == e.FromGroup);
+                if (groupItem != null && groupItem.TargetId.Any(x => x == item.Item1))
                 {
                     sb.AppendLine($"{index}. {item.Item2} - {item.Item1}");
                     index++;

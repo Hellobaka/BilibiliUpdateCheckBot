@@ -91,10 +91,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos
         {
             lock (WriteLock)
             {
-                if (CurrentJObject == null)
-                {
-                    CurrentJObject = new JObject();
-                }
+                CurrentJObject ??= [];
                 if (CurrentJObject.ContainsKey(sectionName))
                 {
                     CurrentJObject[sectionName] = JToken.FromObject(value);
@@ -103,8 +100,18 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos
                 {
                     CurrentJObject.Add(sectionName, JToken.FromObject(value));
                 }
-                // TODO: 禁用热重载，写入完成后按此前配置启动热重载
+                bool monitorConfig = ConfigChangeWatcher.EnableRaisingEvents;
+                if (monitorConfig)
+                {
+                    ConfigChangeWatcher.EnableRaisingEvents = false;
+                }
+
                 File.WriteAllText(ConfigPath, CurrentJObject.ToString(Newtonsoft.Json.Formatting.Indented));
+
+                if (monitorConfig)
+                {
+                    ConfigChangeWatcher.EnableRaisingEvents = true;
+                }
             }
         }
 

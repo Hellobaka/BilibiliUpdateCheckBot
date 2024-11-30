@@ -32,22 +32,22 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 sendText.MsgToSend.Add("请填写番剧sid或序号");
                 return result;
             }
-            if (!int.TryParse(args, out int sid))
+            if (!long.TryParse(args, out long sid))
             {
                 sendText.MsgToSend.Add("番剧sid或序号格式不正确");
                 return result;
             }
-            var bangumis = AppConfig.Instance.GetConfig<List<int>>("Bangumis", new());
+            var bangumis = AppConfig.Bangumis;
+            var group = AppConfig.MonitorBangumis;
 
-            var group = AppConfig.Instance.GetConfig<JObject>("Monitor_Bangumis", new());
-            if (group.ContainsKey(e.FromGroup))
+            var groupItem = group.FirstOrDefault(x => x.GroupId == e.FromGroup);
+            if (groupItem != null)
             {
-                var groupArr = group[e.FromGroup].ToObject<List<int>>();
-                if (!groupArr.Any(x => x == sid))
+                if (!groupItem.TargetId.Contains(sid))
                 {
-                    if (groupArr.Count >= sid)
+                    if (groupItem.TargetId.Count >= sid)
                     {
-                        sid = groupArr[sid - 1];
+                        sid = groupItem.TargetId[(int)(sid - 1)];
                     }
                     else
                     {
@@ -55,19 +55,16 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                         return result;
                     }
                 }
-                group[e.FromGroup].Children().FirstOrDefault(x => x.Value<int>() == sid)?.Remove();
+                groupItem.TargetId.Remove(sid);
             }
-            AppConfig.Instance.SetConfig("Monitor_Bangumis", group);
+            AppConfig.Instance.SetConfig("MonitorBangumis", group);
             bool existFlag = false;
-            foreach (JProperty item in group.Properties())
+            foreach (var item in group)
             {
-                if ((item.Value as JArray).Any(x =>
-                {
-                    var p = (int)x;
-                    return p == sid;
-                }))
+                if (item.TargetId.Contains(sid))
                 {
                     existFlag = true;
+                    break;
                 }
             }
             if (bangumis.Any(x => x == sid) && !existFlag)

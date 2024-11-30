@@ -35,22 +35,12 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
 
         public static bool BlockerHandler(long group)
         {
-            int mode = AppConfig.Instance.GetConfig<int>("Mode", 0);
-            List<long> ls = null;
-            switch (mode)
+            return AppConfig.FilterType switch
             {
-                case 0:
-                    ls = AppConfig.Instance.GetConfig<List<long>>("WhiteList", new());
-                    return ls.Any(x => x == group);
-
-                case 1:
-                    ls = AppConfig.Instance.GetConfig<List<long>>("BlackList", new());
-                    return ls.Any(x => x != group);
-
-                default:
-                    break;
-            }
-            return false;
+                FilterType.WhiteList => AppConfig.WhiteList.Any(x => x == group),
+                FilterType.BlackList => AppConfig.BlackList.Any(x => x != group),
+                _ => false,
+            };
         }
     }
 }
