@@ -50,13 +50,6 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
                 Result = false,
                 SendFlag = false,
             };
-            SendText sendText = new()
-            {
-                SendID = e.FromQQ,
-            };
-
-            sendText.MsgToSend.Add("这里输入需要发送的文本");
-            result.SendObject.Add(sendText);
             return result;
         }
     }
