@@ -110,7 +110,6 @@
     <Compile Include="OrderFunctions\AddStream.cs" />
     <Compile Include="OrderFunctions\RemoveDynamic.cs" />
     <Compile Include="OrderFunctions\AddDynamic.cs" />
-    <Compile Include="OrderFunctions\ExampleFunction.cs" />
     <Compile Include="OrderFunctions\VideoQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
