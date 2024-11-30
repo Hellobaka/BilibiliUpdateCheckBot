@@ -26,6 +26,11 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             appConfig.LoadConfig();
             appConfig.EnableAutoReload();
             Config.Instance = appConfig;
+            if (string.IsNullOrEmpty(Config.Cookies) || string.IsNullOrEmpty(Config.RefreshToken))
+            {
+                MainSave.CQLog.Warning("Cookie或RefreshToken无效");
+                return;
+            }
             foreach (var item in Assembly.GetAssembly(typeof(Event_GroupMessage)).GetTypes())
             {
                 if (item.IsInterface)
