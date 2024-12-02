@@ -52,6 +52,9 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.PublicInfos
             Config.DynamicRetryCount = GetConfig("DynamicRetryCount", 3);
             Config.LiveStreamRetryCount = GetConfig("LiveStreamRetryCount", 3);
             Config.DebugMode = GetConfig("DebugMode", false);
+            Config.CustomFont = GetConfig("CustomFont", "Microsoft YaHei");
+            Config.CustomFontPath = GetConfig("CustomFontPath", "");
+            Config.DynamicFilters = GetConfig("DynamicFilters", new List<string>() { "UP主的推荐", "ADDITIONAL_TYPE_GOODS" });
         }
     }
 }
