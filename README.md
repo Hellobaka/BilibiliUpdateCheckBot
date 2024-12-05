@@ -40,15 +40,23 @@
 
 ## 群控制
 在数据目录的`Config.json`配置文件内，有三个字段用于控制群启用逻辑，默认情况下启用白名单模式
-* Mode: 0=>白名单；1=>黑名单
+* FilterMode: 0=>白名单；1=>黑名单
 * WhiteList: 群号数组，在白名单模式下，只有这个数组内的群能够触发功能
 * BlackList: 群号数组，在黑名单模式下，只有这个数组内的群不能够触发功能
 
+## 依赖文件
+- [libHarfBuzzSharp.dll](https://github.com/Hellobaka/BilibiliUpdateCheckBot/releases/download/2.0.0/libHarfBuzzSharp.dll)
+- [libSkiaSharp.dll](https://github.com/Hellobaka/BilibiliUpdateCheckBot/releases/download/2.0.0/libSkiaSharp.dll)
+- 放置在框架/加载器的
+- 1. 根目录
+  2. x86 文件夹
+  3. libraies 文件夹
+
 ## 已知问题
-- [ ] 部分emoji/特殊字符绘制失败（绘制库的原因，没有办法
-- [ ] 内存占用高（500MB+
-- [ ] 奇怪的文件夹占用bug
-- [ ] 奇怪的什么内存溢出bug
+- [x] 部分emoji/特殊字符绘制失败
+- [x] 内存占用高
+- [x] 奇怪的文件夹占用bug
+- [x] 奇怪的什么内存溢出bug
 - [x] 动态含gif无法绘制（添加了过滤
 - [ ] 港澳台番剧很难获取到是否完结
 
