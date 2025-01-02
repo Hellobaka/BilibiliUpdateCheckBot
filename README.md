@@ -33,6 +33,7 @@
 - https://www.bilibili.com/video/avxxx
 - https://b23.tv/avxxx
 - https://b23.tv/xxx
+- bili2233.cn
 - 分享的卡片
 - 纯BV/av号
 
