@@ -30,16 +30,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             };
             result.SendObject.Add(sendText);
 
-            string vid;
-            if (e.Message.Text.Contains("[CQ:rich,") && e.Message.Text.Contains("b23.tv"))
-            {
-                vid = Videos.ParseURLFromXML(e.Message.Text);
-            }
-            else
-            {
-                string t = Regex.Replace(e.Message.Text, "\\[CQ:.*\\]", "");
-                vid = Videos.ParseURL(t);
-            }
+            string vid = Videos.ParseURL(e.Message.Text);
             if (string.IsNullOrEmpty(vid))
             {
                 result.SendFlag = false;
