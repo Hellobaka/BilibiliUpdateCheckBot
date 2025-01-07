@@ -40,7 +40,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code.OrderFunctions
             try
             {
                 sendText.MsgToSend.Add(CQApi.CQCode_Image(Videos.DrawVideoPic(vid)).ToString());
-                if (e.Message.Text.Contains("b23.tv"))
+                if (e.Message.Text.Contains("b23.tv") || e.Message.Text.Contains("bili2233.xn"))
                 {
                     if (int.TryParse(vid, out int aid))
                     {
