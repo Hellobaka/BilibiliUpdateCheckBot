@@ -38,7 +38,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             return AppConfig.FilterType switch
             {
                 FilterType.WhiteList => AppConfig.WhiteList.Any(x => x == group),
-                FilterType.BlackList => AppConfig.BlackList.Any(x => x != group),
+                FilterType.BlackList => !AppConfig.BlackList.Any(x => x == group),
                 _ => false,
             };
         }
