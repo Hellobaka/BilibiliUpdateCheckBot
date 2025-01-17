@@ -52,6 +52,8 @@
 - 1. 根目录
   2. x86 文件夹
   3. libraies 文件夹
+- [Assets.zip](https://github.com/Hellobaka/BilibiliUpdateCheckBot/releases/download/2.0.0/Assets.zip)
+- 解压到插件的数据目录，保留 Assets 文件夹
 
 ## 已知问题
 - [x] 部分emoji/特殊字符绘制失败
