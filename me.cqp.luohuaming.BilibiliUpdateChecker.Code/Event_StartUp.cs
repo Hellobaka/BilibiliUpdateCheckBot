@@ -74,8 +74,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             {
                 Dynamics.OnDynamicUpdated += UpdateChecker_OnDynamic;
                 LiveStreams.OnLiveStreamUpdated += UpdateChecker_OnStream;
-                Bangumi.OnBanguimiUpdated += UpdateChecker_OnBangumi;
-                Bangumi.OnBanguimiEnded += Update_OnBangumiEnd;
+                Bangumi.OnBangumiUpdated += UpdateChecker_OnBangumi;
+                Bangumi.OnBangumiEnded += Update_OnBangumiEnd;
 
                 foreach (var item in AppConfig.Dynamics)
                 {
