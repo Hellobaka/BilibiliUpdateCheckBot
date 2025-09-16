@@ -64,7 +64,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.App.Export
 			// 反射获取 AppData 实例	
 			Type appDataType = typeof (AppData);	
 			// 注册一个 CQApi 实例	
-			AppInfo appInfo = new AppInfo ("me.cqp.luohuaming.BilibiliUpdateChecker", 1, 9, "哔哩哔哩更新监测", "2.4.0", 1, "落花茗", "监测动态、直播", authCode);	
+			AppInfo appInfo = new AppInfo ("me.cqp.luohuaming.BilibiliUpdateChecker", 1, 9, "哔哩哔哩更新监测", "2.4.1", 1, "落花茗", "监测动态、直播", authCode);	
 			appDataType.GetRuntimeProperty ("CQApi").GetSetMethod (true).Invoke (null, new object[] { new CQApi (appInfo) });	
 			AppData.UnityContainer.RegisterInstance<CQApi> ("me.cqp.luohuaming.BilibiliUpdateChecker", AppData.CQApi);	
 			// 向容器注册一个 CQLog 实例	
