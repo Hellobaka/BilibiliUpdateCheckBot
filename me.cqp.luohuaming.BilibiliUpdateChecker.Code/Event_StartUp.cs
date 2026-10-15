@@ -107,7 +107,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             AppConfig.Instance.SetConfig("MonitorBangumis", group);
         }
 
-        private void UpdateChecker_OnStream(LiveStreamsModel.RoomInfo roomInfo, LiveStreamsModel.UserInfo userInfo, string picPath)
+        private void UpdateChecker_OnStream(LiveStreamsModel.RoomInfo roomInfo, LiveStreamsModel.UserInfo userInfo, bool streaming, string info)
         {
             var group = AppConfig.MonitorStreams;
             foreach (var id in group)
@@ -115,14 +115,21 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                 if (id.TargetId.Any(x => x == userInfo.info.uid))
                 {
                     StringBuilder sb = new();
-                    sb.Append($"{userInfo.info.uname} 开播了, https://live.bilibili.com/{roomInfo.room_id}");
-                    if (string.IsNullOrEmpty(picPath) is false)
+                    if (streaming)
                     {
-                        sb.Append(CQApi.CQCode_Image(picPath));
+                        sb.Append($"{userInfo.info.uname} 开播了, https://live.bilibili.com/{roomInfo.room_id}");
+                        if (string.IsNullOrEmpty(info) is false)
+                        {
+                            sb.Append(CQApi.CQCode_Image(info));
+                        }
+                        else
+                        {
+                            sb.Append($"\n{roomInfo.title} - {roomInfo.live_time}");
+                        }
                     }
                     else
                     {
-                        sb.Append($"\n{roomInfo.title} - {roomInfo.live_time}");
+                        sb.Append($"{userInfo.info.uname} 下播了，{info}");
                     }
                     MainSave.CQApi.SendGroupMessage(id.GroupId, sb.ToString());
                 }
