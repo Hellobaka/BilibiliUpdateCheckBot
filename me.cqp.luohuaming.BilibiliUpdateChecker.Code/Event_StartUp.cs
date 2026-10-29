@@ -6,6 +6,7 @@ using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.EventArgs;
 using me.cqp.luohuaming.BilibiliUpdateChecker.Sdk.Cqp.Interface;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -16,6 +17,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
 {
     public class Event_StartUp : ICQStartup
     {
+        private SentDynamicStore SentDynamics { get; set; }
+
         public void CQStartup(object sender, CQStartupEventArgs e)
         {
             MainSave.AppDirectory = e.CQApi.AppDirectory;
@@ -72,15 +75,23 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             };
             new Thread(() =>
             {
-                Dynamics.OnDynamicUpdated += UpdateChecker_OnDynamic;
+                try
+                {
+                    SentDynamics = new SentDynamicStore(Path.Combine(MainSave.AppDirectory, "SentDynamics.json"));
+                    Dynamics.OnDynamicUpdated += UpdateChecker_OnDynamic;
+                    foreach (var item in AppConfig.Dynamics)
+                    {
+                        Dynamics.AddDynamic(item);
+                    }
+                }
+                catch (Exception exc)
+                {
+                    MainSave.CQLog.Warning("动态监视启动失败", exc.Message);
+                }
                 LiveStreams.OnLiveStreamUpdated += UpdateChecker_OnStream;
                 Bangumi.OnBangumiUpdated += UpdateChecker_OnBangumi;
                 Bangumi.OnBangumiEnded += Update_OnBangumiEnd;
 
-                foreach (var item in AppConfig.Dynamics)
-                {
-                    Dynamics.AddDynamic(item);
-                }
                 foreach (var item in AppConfig.Streams)
                 {
                     LiveStreams.AddStream(item);
@@ -138,6 +149,7 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
 
         private void UpdateChecker_OnDynamic(DynamicModel.Item item, long uid, string picPath)
         {
+            List<Exception> failures = [];
             var group = AppConfig.MonitorDynamics;
             foreach (var id in group)
             {
@@ -150,8 +162,20 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                         sb.Append(CQApi.CQCode_Image(picPath));
                     }
 
-                    MainSave.CQApi.SendGroupMessage(id.GroupId, sb.ToString());
+                    try
+                    {
+                        SentDynamics.SendOnce(id.GroupId, item.id_str,
+                            () => MainSave.CQApi.SendGroupMessage(id.GroupId, sb.ToString()).IsSuccess);
+                    }
+                    catch (Exception exc)
+                    {
+                        failures.Add(exc);
+                    }
                 }
+            }
+            if (failures.Count > 0)
+            {
+                throw new AggregateException("部分群动态发送或记录保存失败", failures);
             }
         }
 

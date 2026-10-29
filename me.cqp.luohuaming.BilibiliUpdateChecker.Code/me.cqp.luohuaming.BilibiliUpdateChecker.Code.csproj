@@ -101,6 +101,7 @@
     <Compile Include="Event_PrivateMessage.cs" />
     <Compile Include="Event_GroupMessage.cs" />
     <Compile Include="Event_StartUp.cs" />
+    <Compile Include="SentDynamicStore.cs" />
     <Compile Include="OrderFunctions\AddBangumi.cs" />
     <Compile Include="OrderFunctions\BangumiList.cs" />
     <Compile Include="OrderFunctions\RemoveBangumi.cs" />
