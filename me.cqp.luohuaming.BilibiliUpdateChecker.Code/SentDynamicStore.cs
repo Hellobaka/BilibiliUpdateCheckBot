@@ -26,16 +26,13 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
             }
         }
 
-        public void SendOnce(long groupId, string dynamicId, Func<bool> send)
+        public void SendOnce(long groupId, string dynamicId, Action send)
         {
             lock (syncRoot)
             {
                 if (!sent.TryGetValue(groupId, out var ids) || !ids.Contains(dynamicId))
                 {
-                    if (!send())
-                    {
-                        throw new InvalidOperationException($"动态 {dynamicId} 发送到群 {groupId} 失败");
-                    }
+                    send();
 
                     if (ids == null)
                     {

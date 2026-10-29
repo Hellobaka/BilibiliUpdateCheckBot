@@ -149,7 +149,6 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
 
         private void UpdateChecker_OnDynamic(DynamicModel.Item item, long uid, string picPath)
         {
-            List<Exception> failures = [];
             var group = AppConfig.MonitorDynamics;
             foreach (var id in group)
             {
@@ -162,20 +161,8 @@ namespace me.cqp.luohuaming.BilibiliUpdateChecker.Code
                         sb.Append(CQApi.CQCode_Image(picPath));
                     }
 
-                    try
-                    {
-                        SentDynamics.SendOnce(id.GroupId, item.id_str,
-                            () => MainSave.CQApi.SendGroupMessage(id.GroupId, sb.ToString()).IsSuccess);
-                    }
-                    catch (Exception exc)
-                    {
-                        failures.Add(exc);
-                    }
+                    SentDynamics.SendOnce(id.GroupId, item.id_str, () => MainSave.CQApi.SendGroupMessage(id.GroupId, sb.ToString()));
                 }
-            }
-            if (failures.Count > 0)
-            {
-                throw new AggregateException("部分群动态发送或记录保存失败", failures);
             }
         }
 
